@@ -3,12 +3,14 @@
 ..with Python and MS SQL
 
 ## Requirements
-
 * Python 2
-..* pip
-...* requests
-
-
+  * python-devel
+  * python-pip
+* pip
+  * urllib3
+  * requests
+  * pymssql
 * FreeTDS and unixODBC
-..* yum'ed
-
+  * freedts-devel
+  * yum'ed
+* ...
