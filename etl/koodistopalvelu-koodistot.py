@@ -2,7 +2,7 @@
 
 from time import localtime, strftime
 
-import sys
+import sys, os
 
 import httplib
 opintopolkuuri = "virkailija.opintopolku.fi"
@@ -11,11 +11,10 @@ httpconn = httplib.HTTPSConnection(opintopolkuuri)
 import json
 
 import pymssql
-
-server = "dwitvipusql16.csc.fi:1433" #getenv("PYMSSQL_TEST_SERVER")
-database = "VIPUNEN_SA" #getenv("PYMSSQL_TEST_DATABASE")
-user = "LJquicktest" #getenv("PYMSSQL_TEST_USERNAME")
-password = "Quicktest1" #getenv("PYMSSQL_TEST_PASSWORD")
+server = os.getenv("PYMSSQL_TEST_SERVER")
+database = os.getenv("PYMSSQL_TEST_DATABASE")
+user = os.getenv("PYMSSQL_TEST_USERNAME")
+password = os.getenv("PYMSSQL_TEST_PASSWORD")
 
 def haenimi(i,kieli):
     for m in i["metadata"]:
