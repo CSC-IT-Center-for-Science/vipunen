@@ -11,10 +11,6 @@ httpconn = httplib.HTTPSConnection(opintopolkuuri)
 import json
 
 import pymssql
-<<<<<<< HEAD
-=======
-import os
->>>>>>> 386b85f3395ac42f461a4a1ccfe6fc9406025d29
 server = os.getenv("PYMSSQL_TEST_SERVER")
 database = os.getenv("PYMSSQL_TEST_DATABASE")
 user = os.getenv("PYMSSQL_TEST_USERNAME")
