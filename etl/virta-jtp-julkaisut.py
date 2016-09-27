@@ -18,6 +18,12 @@ database = os.getenv("PYMSSQL_TEST_DATABASE")
 user = os.getenv("PYMSSQL_TEST_USERNAME")
 password = os.getenv("PYMSSQL_TEST_PASSWORD")
 
+# hae avaimen arvo json:sta 
+def jv(jsondata, key):
+  if key in jsondata:
+    return jsondata[key]
+  return None
+
 def main():
   pyalku = time.time()
   print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" alkaa").encode('utf-8')
@@ -39,24 +45,24 @@ def main():
   for i in j:
     lkm += 1
     # sarakkeet
-    julkaisunTunnus = getattr(i, "julkaisunTunnus", None)
-    julkaisunNimi = getattr(i, "julkaisunNimi", None)
-    tekijat = getattr(i, "tekijat", None)
-    julkaisuVuosi = getattr(i, "julkaisuVuosi", None)
-    julkaisuTyyppi = getattr(i, "julkaisuTyyppi", None)
-    lehdenNimi = getattr(i, "lehdenNimi", None)
-    kustantajanNimi = getattr(i, "kustantajanNimi", None)
-    isbn = getattr(i, "isbn", None)
-    issn = getattr(i, "issn", None)
-    muutospvm = getattr(i, "muutospvm", None)
-    luontipvm = getattr(i, "luontipvm", None)
-    julkaisunTila = getattr(i, "julkaisunTila", None)
-    doi = getattr(i, "doi", None)
-    julkaisunOrgTunnus = getattr(i, "julkaisunOrgTunnus", None)
-    yhteisJulkaisunTunnus = getattr(i, "yhteisJulkaisunTunnus", None)
-    jufoTunnus = getattr(i, "jufoTunnus", None)
-    organisaatioTunnus = getattr(i, "organisaatioTunnus", None)
-    ilmoitusVuosi = getattr(i, "ilmoitusVuosi", None)
+    julkaisunTunnus = jv(i ,"julkaisunTunnus")
+    julkaisunNimi = jv(i, "julkaisunNimi")
+    tekijat = jv(i, "tekijat")
+    julkaisuVuosi = jv(i, "julkaisuVuosi")
+    julkaisuTyyppi = jv(i, "julkaisuTyyppi")
+    lehdenNimi = jv(i, "lehdenNimi")
+    kustantajanNimi = jv(i, "kustantajanNimi")
+    isbn = jv(i, "isbn")
+    issn = jv(i, "issn")
+    muutospvm = jv(i, "muutospvm")
+    luontipvm = jv(i, "luontipvm")
+    julkaisunTila = jv(i, "julkaisunTila")
+    doi = jv(i, "doi")
+    julkaisunOrgTunnus = jv(i, "julkaisunOrgTunnus")
+    yhteisJulkaisunTunnus = jv(i, "yhteisJulkaisunTunnus")
+    jufoTunnus = jv(i, "jufoTunnus")
+    organisaatioTunnus = jv(i, "organisaatioTunnus")
+    ilmoitusVuosi = jv(i, "ilmoitusVuosi")
     
     if lkm%1000 == 0:
       print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d" % (lkm)).encode('utf-8')

@@ -18,6 +18,12 @@ database = os.getenv("PYMSSQL_TEST_DATABASE")
 user = os.getenv("PYMSSQL_TEST_USERNAME")
 password = os.getenv("PYMSSQL_TEST_PASSWORD")
 
+# hae avaimen arvo json:sta 
+def jv(jsondata, key):
+  if key in jsondata:
+    return jsondata[key]
+  return None
+
 def main():
   pyalku = time.time()
   print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" alkaa").encode('utf-8')
@@ -39,27 +45,27 @@ def main():
   for i in j:
     lkm += 1
     # sarakkeet
-    avoinKK = getattr(i, "avoinKK", None)
-    db = getattr(i, "db", None) #string
-    erikoistumisopinnot = getattr(i, "erikoistumisopinnot", None)
-    erillinenOO = getattr(i, "erillinenOO", None)
-    hyvaksiluetut = getattr(i, "hyvaksiluetut", None)
-    joo = getattr(i, "joo", None)
-    koodi = getattr(i, "koodi", None) #string
-    koulutustyyppi = getattr(i, "koulutustyyppi", None) #string
-    kuvaus = getattr(i, "kuvaus", None) #string
-    kvVaihto = getattr(i, "kvVaihto", None)
+    avoinKK = jv(i, 'avoinKK')
+    db = jv(i, "db") #string
+    erikoistumisopinnot = jv(i, "erikoistumisopinnot")
+    erillinenOO = jv(i, "erillinenOO")
+    hyvaksiluetut = jv(i, "hyvaksiluetut")
+    joo = jv(i, "joo")
+    koodi = jv(i, "koodi") #string
+    koulutustyyppi = jv(i, "koulutustyyppi") #string
+    kuvaus = jv(i, "kuvaus") #string
+    kvVaihto = jv(i, "kvVaihto")
     #luoja #string
     #luontipaivamaara #timestamp
-    mValKo = getattr(i, "mValKo", None)
+    mValKo = jv(i, "mValKo")
     #paivittaja #string
     #paivityspaivamaara #timestamp
-    perustutkinto = getattr(i, "perustutkinto", None)
-    tkiHarjoittelunLaajuus = getattr(i, "tkiHarjoittelunLaajuus", None)
-    tkiMuutLaajuus = getattr(i, "tkiMuutLaajuus", None)
-    tkiToiminnanLaajuus = getattr(i, "tkiToiminnanLaajuus", None)
-    vieraskielinen = getattr(i, "vieraskielinen", None)
-    vuosi = getattr(i, "vuosi", None)
+    perustutkinto = jv(i, "perustutkinto")
+    tkiHarjoittelunLaajuus = jv(i, "tkiHarjoittelunLaajuus")
+    tkiMuutLaajuus = jv(i, "tkiMuutLaajuus")
+    tkiToiminnanLaajuus = jv(i, "tkiToiminnanLaajuus")
+    vieraskielinen = jv(i, "vieraskielinen")
+    vuosi = jv(i, "vuosi")
     
     print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d" % (lkm)).encode('utf-8')
     cur.execute("""INSERT INTO SA_VIRTA_OTP_AMKOPINTOPISTE (avoinKK, db, erikoistumisopinnot, erillinenOO, hyvaksiluetut, joo, koodi, koulutustyyppi, kuvaus, kvVaihto, mValKo, perustutkinto, tkiHarjoittelunLaajuus, tkiMuutLaajuus, tkiToiminnanLaajuus, vieraskielinen, vuosi) VALUES (%s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s)""", (avoinKK, db, erikoistumisopinnot, erillinenOO, hyvaksiluetut, joo, koodi, koulutustyyppi, kuvaus, kvVaihto, mValKo, perustutkinto, tkiHarjoittelunLaajuus, tkiMuutLaajuus, tkiToiminnanLaajuus, vieraskielinen, vuosi))
