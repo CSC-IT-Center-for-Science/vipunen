@@ -7,6 +7,7 @@ import sys, os
 
 import httplib
 sourcehostname = "dwidvirtaws.csc.fi"
+#sourcehostname = "dwitvirtaws1.csc.fi"
 #httpconn = httplib.HTTPSConnection(sourcehostname)
 httpconn = httplib.HTTPConnection(sourcehostname)
 
@@ -36,7 +37,7 @@ def main():
   cur.execute("DELETE FROM SA_VIRTA_OTP_AMKOPINTOPISTE")
   conn.commit()
 
-  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" haetaan opintopolusta").encode('utf-8')
+  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" haetaan %s" % (sourcehostname)).encode('utf-8')
   apiuri = "/otp/api/AMKOpintopiste"
   httpconn.request('GET', apiuri)
   r = httpconn.getresponse()

@@ -6,7 +6,7 @@ import time
 import sys, os
 
 import httplib
-sourcehostname = "raja-dev.csc.fi"
+sourcehostname = "dwitjutife1.csc.fi"
 httpconn = httplib.HTTPSConnection(sourcehostname)
 #httpconn = httplib.HTTPConnection(sourcehostname)
 
