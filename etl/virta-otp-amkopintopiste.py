@@ -29,8 +29,8 @@ def main():
   conn = pymssql.connect(server, user, password, database)
   cur = conn.cursor()
 
-  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan SA_VIRTA_OTP_AMKOPINTOPISTE").encode('utf-8')
-  cur.execute("DELETE FROM SA_VIRTA_OTP_AMKOPINTOPISTE")
+  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan sa_virta_otp_amkopintopiste").encode('utf-8')
+  cur.execute("DELETE FROM sa_virta_otp_amkopintopiste")
   conn.commit()
 
   print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" haetaan %s" % (sourcehostname)).encode('utf-8')
@@ -65,7 +65,7 @@ def main():
     vuosi = jv(i, "vuosi")
     
     #print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d" % (lkm)).encode('utf-8')
-    cur.execute("""INSERT INTO SA_VIRTA_OTP_AMKOPINTOPISTE (avoinKK, db, erikoistumisopinnot, erillinenOO, hyvaksiluetut, joo, koodi, koulutustyyppi, kuvaus, kvVaihto, mValKo, perustutkinto, tkiHarjoittelunLaajuus, tkiMuutLaajuus, tkiToiminnanLaajuus, vieraskielinen, vuosi) VALUES (%s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s)""", (avoinKK, db, erikoistumisopinnot, erillinenOO, hyvaksiluetut, joo, koodi, koulutustyyppi, kuvaus, kvVaihto, mValKo, perustutkinto, tkiHarjoittelunLaajuus, tkiMuutLaajuus, tkiToiminnanLaajuus, vieraskielinen, vuosi))
+    cur.execute("""INSERT INTO sa_virta_otp_amkopintopiste (avoinKK, db, erikoistumisopinnot, erillinenOO, hyvaksiluetut, joo, koodi, koulutustyyppi, kuvaus, kvVaihto, mValKo, perustutkinto, tkiHarjoittelunLaajuus, tkiMuutLaajuus, tkiToiminnanLaajuus, vieraskielinen, vuosi) VALUES (%s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s)""", (avoinKK, db, erikoistumisopinnot, erillinenOO, hyvaksiluetut, joo, koodi, koulutustyyppi, kuvaus, kvVaihto, mValKo, perustutkinto, tkiHarjoittelunLaajuus, tkiMuutLaajuus, tkiToiminnanLaajuus, vieraskielinen, vuosi))
     conn.commit()
 
   cur.close()

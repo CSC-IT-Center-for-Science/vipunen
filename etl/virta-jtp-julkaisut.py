@@ -29,8 +29,8 @@ def main():
   conn = pymssql.connect(server, user, password, database)
   cur = conn.cursor()
 
-  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan SA_VIRTA_JTP_JULKAISUT").encode('utf-8')
-  cur.execute("DELETE FROM SA_VIRTA_JTP_JULKAISUT")
+  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan sa_virta_jtp_julkaisut").encode('utf-8')
+  cur.execute("DELETE FROM sa_virta_jtp_julkaisut")
   conn.commit()
 
   print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" haetaan %s" % (sourcehostname)).encode('utf-8')
@@ -63,7 +63,7 @@ def main():
     
     #if lkm%1000 == 0:
     #  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d" % (lkm)).encode('utf-8')
-    cur.execute("""INSERT INTO SA_VIRTA_JTP_JULKAISUT (julkaisunTunnus, julkaisunNimi, tekijat, julkaisuVuosi, julkaisuTyyppi, lehdenNimi, kustantajanNimi, isbn, issn, julkaisunTila, doi, julkaisunOrgTunnus, yhteisJulkaisunTunnus, jufoTunnus, organisaatioTunnus, ilmoitusVuosi) VALUES (%s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s)""", (julkaisunTunnus, julkaisunNimi, tekijat, julkaisuVuosi, julkaisuTyyppi, lehdenNimi, kustantajanNimi, isbn, issn, julkaisunTila, doi, julkaisunOrgTunnus, yhteisJulkaisunTunnus, jufoTunnus, organisaatioTunnus, ilmoitusVuosi))
+    cur.execute("""INSERT INTO sa_virta_jtp_julkaisut (julkaisunTunnus, julkaisunNimi, tekijat, julkaisuVuosi, julkaisuTyyppi, lehdenNimi, kustantajanNimi, isbn, issn, julkaisunTila, doi, julkaisunOrgTunnus, yhteisJulkaisunTunnus, jufoTunnus, organisaatioTunnus, ilmoitusVuosi) VALUES (%s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s)""", (julkaisunTunnus, julkaisunNimi, tekijat, julkaisuVuosi, julkaisuTyyppi, lehdenNimi, kustantajanNimi, isbn, issn, julkaisunTila, doi, julkaisunOrgTunnus, yhteisJulkaisunTunnus, jufoTunnus, organisaatioTunnus, ilmoitusVuosi))
     conn.commit()
 
   cur.close()

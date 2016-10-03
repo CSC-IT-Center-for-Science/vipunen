@@ -28,8 +28,8 @@ def main():
     conn = pymssql.connect(server, user, password, database)
     cur = conn.cursor()
 
-    print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan SA_KOODISTOT").encode('utf-8')
-    cur.execute("DELETE FROM SA_KOODISTOT")
+    print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan sa_koodistot").encode('utf-8')
+    cur.execute("DELETE FROM sa_koodistot")
     conn.commit()
 
     koodistouri = "/koodisto-service/rest/json/%s/koodi"
@@ -85,7 +85,7 @@ def main():
             loppupvm = i["voimassaLoppuPvm"]
 
             #print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %s -- %d -- %s" % (koodisto,lkm,koodi)).encode('utf-8')
-            cur.execute("""INSERT INTO SA_KOODISTOT (koodisto,koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm) VALUES (%s,%s,%s,%s,%s,%s,%s)""", (koodisto,koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm))
+            cur.execute("""INSERT INTO sa_koodistot (koodisto,koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm) VALUES (%s,%s,%s,%s,%s,%s,%s)""", (koodisto,koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm))
             conn.commit()
 
     cur.close()

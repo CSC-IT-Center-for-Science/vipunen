@@ -34,8 +34,8 @@ def main():
   conn = pymssql.connect(server, user, password, database)
   cur = conn.cursor()
 
-  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan SA_ALUELUOKITUS").encode('utf-8')
-  cur.execute("DELETE FROM SA_ALUELUOKITUS")
+  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan sa_alueluokitus").encode('utf-8')
+  cur.execute("DELETE FROM sa_alueluokitus")
   conn.commit()
 
   print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" haetaan opintopolusta").encode('utf-8')
@@ -131,7 +131,7 @@ def main():
         kuntaryhmanimi_en = haenimi(ii,"EN")
 
     #print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d -- %s" % (lkm,koodi)).encode('utf-8')
-    cur.execute("""INSERT INTO SA_ALUELUOKITUS (koodi,nimi,nimi_sv,nimi_en, alkupvm,loppupvm, maakuntakoodi,maakuntanimi,maakuntanimi_sv,maakuntanimi_en, avikoodi,avinimi,avinimi_sv,avinimi_en, elykoodi,elynimi,elynimi_sv,elynimi_en, kielisuhdekoodi,kielisuhdenimi,kielisuhdenimi_sv,kielisuhdenimi_en, seutukuntakoodi,seutukuntanimi,seutukuntanimi_sv,seutukuntanimi_en, laanikoodi,laaninimi,laaninimi_sv,laaninimi_en, kuntaryhmakoodi,kuntaryhmanimi,kuntaryhmanimi_sv,kuntaryhmanimi_en) VALUES (%s,%s,%s,%s, %s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s)""", (koodi,nimi,nimi_sv,nimi_en, alkupvm,loppupvm, maakuntakoodi,maakuntanimi,maakuntanimi_sv,maakuntanimi_en, avikoodi,avinimi,avinimi_sv,avinimi_en, elykoodi,elynimi,elynimi_sv,elynimi_en, kielisuhdekoodi,kielisuhdenimi,kielisuhdenimi_sv,kielisuhdenimi_en, seutukuntakoodi,seutukuntanimi,seutukuntanimi_sv,seutukuntanimi_en, laanikoodi,laaninimi,laaninimi_sv,laaninimi_en, kuntaryhmakoodi,kuntaryhmanimi,kuntaryhmanimi_sv,kuntaryhmanimi_en))
+    cur.execute("""INSERT INTO sa_alueluokitus (koodi,nimi,nimi_sv,nimi_en, alkupvm,loppupvm, maakuntakoodi,maakuntanimi,maakuntanimi_sv,maakuntanimi_en, avikoodi,avinimi,avinimi_sv,avinimi_en, elykoodi,elynimi,elynimi_sv,elynimi_en, kielisuhdekoodi,kielisuhdenimi,kielisuhdenimi_sv,kielisuhdenimi_en, seutukuntakoodi,seutukuntanimi,seutukuntanimi_sv,seutukuntanimi_en, laanikoodi,laaninimi,laaninimi_sv,laaninimi_en, kuntaryhmakoodi,kuntaryhmanimi,kuntaryhmanimi_sv,kuntaryhmanimi_en) VALUES (%s,%s,%s,%s, %s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s)""", (koodi,nimi,nimi_sv,nimi_en, alkupvm,loppupvm, maakuntakoodi,maakuntanimi,maakuntanimi_sv,maakuntanimi_en, avikoodi,avinimi,avinimi_sv,avinimi_en, elykoodi,elynimi,elynimi_sv,elynimi_en, kielisuhdekoodi,kielisuhdenimi,kielisuhdenimi_sv,kielisuhdenimi_en, seutukuntakoodi,seutukuntanimi,seutukuntanimi_sv,seutukuntanimi_en, laanikoodi,laaninimi,laaninimi_sv,laaninimi_en, kuntaryhmakoodi,kuntaryhmanimi,kuntaryhmanimi_sv,kuntaryhmanimi_en))
     conn.commit()
 
   cur.close()
