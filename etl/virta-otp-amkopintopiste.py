@@ -1,13 +1,10 @@
 #!/usr/bin/python
 
 from time import localtime, strftime
-import time
-
 import sys, os
 
 import httplib
-sourcehostname = "dwidvirtaws.csc.fi"
-#sourcehostname = "dwitvirtaws1.csc.fi"
+sourcehostname = "dwitvirtaws1.csc.fi"
 #httpconn = httplib.HTTPSConnection(sourcehostname)
 httpconn = httplib.HTTPConnection(sourcehostname)
 
@@ -26,10 +23,9 @@ def jv(jsondata, key):
   return None
 
 def main():
-  pyalku = time.time()
   print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" alkaa").encode('utf-8')
 
-  print ("Connecting to database\n ->%s" % (database)).encode('utf-8')
+  print ("Connecting to database %s" % (database)).encode('utf-8')
   conn = pymssql.connect(server, user, password, database)
   cur = conn.cursor()
 
@@ -68,17 +64,14 @@ def main():
     vieraskielinen = jv(i, "vieraskielinen")
     vuosi = jv(i, "vuosi")
     
-    print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d" % (lkm)).encode('utf-8')
+    #print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d" % (lkm)).encode('utf-8')
     cur.execute("""INSERT INTO SA_VIRTA_OTP_AMKOPINTOPISTE (avoinKK, db, erikoistumisopinnot, erillinenOO, hyvaksiluetut, joo, koodi, koulutustyyppi, kuvaus, kvVaihto, mValKo, perustutkinto, tkiHarjoittelunLaajuus, tkiMuutLaajuus, tkiToiminnanLaajuus, vieraskielinen, vuosi) VALUES (%s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s)""", (avoinKK, db, erikoistumisopinnot, erillinenOO, hyvaksiluetut, joo, koodi, koulutustyyppi, kuvaus, kvVaihto, mValKo, perustutkinto, tkiHarjoittelunLaajuus, tkiMuutLaajuus, tkiToiminnanLaajuus, vieraskielinen, vuosi))
     conn.commit()
 
   cur.close()
   conn.close()
 
-  pyloppu = time.time()
-  pykesto = pyloppu - pyalku
   print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" valmis").encode('utf-8')
-  print ("ajo kesti %f"%(pykesto)).encode('utf-8')
 
 if __name__ == "__main__":
   main()

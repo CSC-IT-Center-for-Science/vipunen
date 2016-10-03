@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 from time import localtime, strftime
-
 import sys, os
 
 import httplib
@@ -25,7 +24,7 @@ def haenimi(i,kieli):
 def main():
     print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" alkaa").encode('utf-8')
 
-    print ("Connecting to database\n ->%s" % (database)).encode('utf-8')
+    #print ("Connecting to database %s" % (database)).encode('utf-8')
     conn = pymssql.connect(server, user, password, database)
     cur = conn.cursor()
 
@@ -85,8 +84,7 @@ def main():
             alkupvm = i["voimassaAlkuPvm"]
             loppupvm = i["voimassaLoppuPvm"]
 
-            #print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %s -- %d -- (%s,%s,%s,%s,%s,%s)" % (koodisto,lkm,koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm)).encode('utf-8')
-            print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %s -- %d -- %s" % (koodisto,lkm,koodi)).encode('utf-8')
+            #print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %s -- %d -- %s" % (koodisto,lkm,koodi)).encode('utf-8')
             cur.execute("""INSERT INTO SA_KOODISTOT (koodisto,koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm) VALUES (%s,%s,%s,%s,%s,%s,%s)""", (koodisto,koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm))
             conn.commit()
 

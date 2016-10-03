@@ -1,8 +1,6 @@
 #!/usr/bin/python
 
 from time import localtime, strftime
-import time
-
 import sys, os
 
 import httplib
@@ -25,10 +23,9 @@ def jv(jsondata, key):
   return None
 
 def main():
-  pyalku = time.time()
   print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" alkaa").encode('utf-8')
 
-  print ("Connecting to database\n ->%s" % (database)).encode('utf-8')
+  #print ("Connecting to database %s" % (database)).encode('utf-8')
   conn = pymssql.connect(server, user, password, database)
   cur = conn.cursor()
 
@@ -64,18 +61,15 @@ def main():
     organisaatioTunnus = jv(i, "organisaatioTunnus")
     ilmoitusVuosi = jv(i, "ilmoitusVuosi")
     
-    if lkm%1000 == 0:
-      print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d" % (lkm)).encode('utf-8')
+    #if lkm%1000 == 0:
+    #  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d" % (lkm)).encode('utf-8')
     cur.execute("""INSERT INTO SA_VIRTA_JTP_JULKAISUT (julkaisunTunnus, julkaisunNimi, tekijat, julkaisuVuosi, julkaisuTyyppi, lehdenNimi, kustantajanNimi, isbn, issn, julkaisunTila, doi, julkaisunOrgTunnus, yhteisJulkaisunTunnus, jufoTunnus, organisaatioTunnus, ilmoitusVuosi) VALUES (%s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s, %s,%s,%s,%s)""", (julkaisunTunnus, julkaisunNimi, tekijat, julkaisuVuosi, julkaisuTyyppi, lehdenNimi, kustantajanNimi, isbn, issn, julkaisunTila, doi, julkaisunOrgTunnus, yhteisJulkaisunTunnus, jufoTunnus, organisaatioTunnus, ilmoitusVuosi))
     conn.commit()
 
   cur.close()
   conn.close()
 
-  pyloppu = time.time()
-  pykesto = pyloppu - pyalku
   print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" valmis").encode('utf-8')
-  print ("ajo kesti %f"%(pykesto)).encode('utf-8')
 
 if __name__ == "__main__":
   main()
