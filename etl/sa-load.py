@@ -20,17 +20,19 @@ def main(argv):
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" begin"
   
   # muuttujat jotka tulee antaa
+  secure = False
   hostname = ""
   url = ""
   table = ""
 
   try:
-    opts, args = getopt.getopt(argv,"H:u:t:",["hostname=","url=","table="])
+    opts, args = getopt.getopt(argv,"sH:u:t:",["hostname=","url=","table="])
   except getopt.GetoptError:
     print ' -H <hostname> -u <url> -t <table>'
     sys.exit(2)
   for opt, arg in opts:
-    if opt in ("-H", "--hostname"): hostname = arg
+    if opt in ("-s", "--secure"): secure = True
+    elif opt in ("-H", "--hostname"): hostname = arg
     elif opt in ("-u", "--url"): url = arg
     elif opt in ("-t", "--table"): table = arg
   if not hostname: sys.exit(2)
@@ -40,8 +42,11 @@ def main(argv):
   #print "Connecting to database %s" % (database)
   conn = pymssql.connect(server, user, password, database)
   cur = conn.cursor(as_dict=True)
-
-  httpconn = httplib.HTTPSConnection(hostname)
+  
+  if secure:
+    httpconn = httplib.HTTPSConnection(hostname)
+  else:
+    httpconn = httplib.HTTPConnection(hostname)
 
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" load from "+hostname+url
   httpconn.request('GET', url)
