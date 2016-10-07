@@ -1,19 +1,18 @@
 #!/usr/bin/python
 
-from time import localtime, strftime
 import sys, os
-
 import httplib
+import pymssql
+import json
+from time import localtime, strftime
+
 opintopolkuuri = "virkailija.opintopolku.fi"
 httpconn = httplib.HTTPSConnection(opintopolkuuri)
 
-import json
-
-import pymssql
-server = os.getenv("PYMSSQL_TEST_SERVER")
-database = os.getenv("PYMSSQL_TEST_DATABASE")
-user = os.getenv("PYMSSQL_TEST_USERNAME")
-password = os.getenv("PYMSSQL_TEST_PASSWORD")
+dbhost = os.getenv("PYMSSQL_TEST_SERVER")
+dbname = os.getenv("PYMSSQL_TEST_DATABASE")
+dbuser = os.getenv("PYMSSQL_TEST_USERNAME")
+dbpass = os.getenv("PYMSSQL_TEST_PASSWORD")
 
 def haenimi(i,kieli):
     for m in i["metadata"]:
@@ -24,12 +23,12 @@ def haenimi(i,kieli):
 def main():
     print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" alkaa").encode('utf-8')
 
-    #print ("Connecting to database %s" % (database)).encode('utf-8')
-    conn = pymssql.connect(server, user, password, database)
+    #print ("Connecting to database %s" % (dbname)).encode('utf-8')
+    conn = pymssql.connect(dbhost, dbuser, dbpass, dbname)
     cur = conn.cursor()
 
     print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan sa_koulutusluokitus").encode('utf-8')
-    cur.execute("DELETE FROM sa_koulutusluokitus")
+    cur.execute("TRUNCATE TABLE sa_koulutusluokitus")
     conn.commit()
 
     print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" haetaan opintopolusta").encode('utf-8')
@@ -207,7 +206,43 @@ def main():
                 okmohjauksenalanimi_en = haenimi(ii,"EN")
 
         #print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d -- %s" % (lkm,koodi)).encode('utf-8')
-        cur.execute("""INSERT INTO sa_koulutusluokitus (koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm ,koulutusaste2002koodi,koulutusaste2002nimi,koulutusaste2002nimi_sv,koulutusaste2002nimi_en ,koulutusala2002koodi,koulutusala2002nimi,koulutusala2002nimi_sv,koulutusala2002nimi_en ,opintoala2002koodi,opintoala2002nimi,opintoala2002nimi_sv,opintoala2002nimi_en ,koulutusaste1995koodi,koulutusaste1995nimi,koulutusaste1995nimi_sv,koulutusaste1995nimi_en ,koulutusala1995koodi,koulutusala1995nimi,koulutusala1995nimi_sv,koulutusala1995nimi_en ,opintoala1995koodi,opintoala1995nimi,opintoala1995nimi_sv,opintoala1995nimi_en ,tutkintokoodi,tutkintonimi,tutkintonimi_sv,tutkintonimi_en ,tutkintotyyppikoodi,tutkintotyyppinimi,tutkintotyyppinimi_sv,tutkintotyyppinimi_en ,koulutustyyppikoodi,koulutustyyppinimi,koulutustyyppinimi_sv,koulutustyyppinimi_en ,isced2011koulutusastekoodi,isced2011koulutusastenimi,isced2011koulutusastenimi_sv,isced2011koulutusastenimi_en ,isced2011koulutusastetaso1koodi,isced2011koulutusastetaso1nimi,isced2011koulutusastetaso1nimi_sv,isced2011koulutusastetaso1nimi_en ,isced2011koulutusastetaso2koodi,isced2011koulutusastetaso2nimi,isced2011koulutusastetaso2nimi_sv,isced2011koulutusastetaso2nimi_en ,isced2011koulutusalataso1koodi,isced2011koulutusalataso1nimi,isced2011koulutusalataso1nimi_sv,isced2011koulutusalataso1nimi_en ,isced2011koulutusalataso2koodi,isced2011koulutusalataso2nimi,isced2011koulutusalataso2nimi_sv,isced2011koulutusalataso2nimi_en ,isced2011koulutusalataso3koodi,isced2011koulutusalataso3nimi,isced2011koulutusalataso3nimi_sv,isced2011koulutusalataso3nimi_en,okmohjauksenalakoodi,okmohjauksenalanimi,okmohjauksenalanimi_sv,okmohjauksenalanimi_en) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", (koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm ,koulutusaste2002koodi,koulutusaste2002nimi,koulutusaste2002nimi_sv,koulutusaste2002nimi_en ,koulutusala2002koodi,koulutusala2002nimi,koulutusala2002nimi_sv,koulutusala2002nimi_en ,opintoala2002koodi,opintoala2002nimi,opintoala2002nimi_sv,opintoala2002nimi_en ,koulutusaste1995koodi,koulutusaste1995nimi,koulutusaste1995nimi_sv,koulutusaste1995nimi_en ,koulutusala1995koodi,koulutusala1995nimi,koulutusala1995nimi_sv,koulutusala1995nimi_en ,opintoala1995koodi,opintoala1995nimi,opintoala1995nimi_sv,opintoala1995nimi_en ,tutkintokoodi,tutkintonimi,tutkintonimi_sv,tutkintonimi_en ,tutkintotyyppikoodi,tutkintotyyppinimi,tutkintotyyppinimi_sv,tutkintotyyppinimi_en ,koulutustyyppikoodi,koulutustyyppinimi,koulutustyyppinimi_sv,koulutustyyppinimi_en ,isced2011koulutusastekoodi,isced2011koulutusastenimi,isced2011koulutusastenimi_sv,isced2011koulutusastenimi_en ,isced2011koulutusastetaso1koodi,isced2011koulutusastetaso1nimi,isced2011koulutusastetaso1nimi_sv,isced2011koulutusastetaso1nimi_en ,isced2011koulutusastetaso2koodi,isced2011koulutusastetaso2nimi,isced2011koulutusastetaso2nimi_sv,isced2011koulutusastetaso2nimi_en ,isced2011koulutusalataso1koodi,isced2011koulutusalataso1nimi,isced2011koulutusalataso1nimi_sv,isced2011koulutusalataso1nimi_en ,isced2011koulutusalataso2koodi,isced2011koulutusalataso2nimi,isced2011koulutusalataso2nimi_sv,isced2011koulutusalataso2nimi_en ,isced2011koulutusalataso3koodi,isced2011koulutusalataso3nimi,isced2011koulutusalataso3nimi_sv,isced2011koulutusalataso3nimi_en,okmohjauksenalakoodi,okmohjauksenalanimi,okmohjauksenalanimi_sv,okmohjauksenalanimi_en))
+        cur.execute("""
+        INSERT INTO sa_koulutusluokitus (koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm
+        ,koulutusaste2002koodi,koulutusaste2002nimi,koulutusaste2002nimi_sv,koulutusaste2002nimi_en
+        ,koulutusala2002koodi,koulutusala2002nimi,koulutusala2002nimi_sv,koulutusala2002nimi_en
+        ,opintoala2002koodi,opintoala2002nimi,opintoala2002nimi_sv,opintoala2002nimi_en
+        ,koulutusaste1995koodi,koulutusaste1995nimi,koulutusaste1995nimi_sv,koulutusaste1995nimi_en
+        ,koulutusala1995koodi,koulutusala1995nimi,koulutusala1995nimi_sv,koulutusala1995nimi_en
+        ,opintoala1995koodi,opintoala1995nimi,opintoala1995nimi_sv,opintoala1995nimi_en
+        ,tutkintokoodi,tutkintonimi,tutkintonimi_sv,tutkintonimi_en
+        ,tutkintotyyppikoodi,tutkintotyyppinimi,tutkintotyyppinimi_sv,tutkintotyyppinimi_en
+        ,koulutustyyppikoodi,koulutustyyppinimi,koulutustyyppinimi_sv,koulutustyyppinimi_en
+        ,isced2011koulutusastekoodi,isced2011koulutusastenimi,isced2011koulutusastenimi_sv,isced2011koulutusastenimi_en
+        ,isced2011koulutusastetaso1koodi,isced2011koulutusastetaso1nimi,isced2011koulutusastetaso1nimi_sv,isced2011koulutusastetaso1nimi_en
+        ,isced2011koulutusastetaso2koodi,isced2011koulutusastetaso2nimi,isced2011koulutusastetaso2nimi_sv,isced2011koulutusastetaso2nimi_en
+        ,isced2011koulutusalataso1koodi,isced2011koulutusalataso1nimi,isced2011koulutusalataso1nimi_sv,isced2011koulutusalataso1nimi_en
+        ,isced2011koulutusalataso2koodi,isced2011koulutusalataso2nimi,isced2011koulutusalataso2nimi_sv,isced2011koulutusalataso2nimi_en
+        ,isced2011koulutusalataso3koodi,isced2011koulutusalataso3nimi,isced2011koulutusalataso3nimi_sv,isced2011koulutusalataso3nimi_en
+        ,okmohjauksenalakoodi,okmohjauksenalanimi,okmohjauksenalanimi_sv,okmohjauksenalanimi_en
+        ,source)
+        VALUES (%s,%s,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s,%s,%s,%s ,%s)""", (koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm
+        ,koulutusaste2002koodi,koulutusaste2002nimi,koulutusaste2002nimi_sv,koulutusaste2002nimi_en
+        ,koulutusala2002koodi,koulutusala2002nimi,koulutusala2002nimi_sv,koulutusala2002nimi_en
+        ,opintoala2002koodi,opintoala2002nimi,opintoala2002nimi_sv,opintoala2002nimi_en
+        ,koulutusaste1995koodi,koulutusaste1995nimi,koulutusaste1995nimi_sv,koulutusaste1995nimi_en
+        ,koulutusala1995koodi,koulutusala1995nimi,koulutusala1995nimi_sv,koulutusala1995nimi_en
+        ,opintoala1995koodi,opintoala1995nimi,opintoala1995nimi_sv,opintoala1995nimi_en
+        ,tutkintokoodi,tutkintonimi,tutkintonimi_sv,tutkintonimi_en
+        ,tutkintotyyppikoodi,tutkintotyyppinimi,tutkintotyyppinimi_sv,tutkintotyyppinimi_en
+        ,koulutustyyppikoodi,koulutustyyppinimi,koulutustyyppinimi_sv,koulutustyyppinimi_en
+        ,isced2011koulutusastekoodi,isced2011koulutusastenimi,isced2011koulutusastenimi_sv,isced2011koulutusastenimi_en
+        ,isced2011koulutusastetaso1koodi,isced2011koulutusastetaso1nimi,isced2011koulutusastetaso1nimi_sv,isced2011koulutusastetaso1nimi_en
+        ,isced2011koulutusastetaso2koodi,isced2011koulutusastetaso2nimi,isced2011koulutusastetaso2nimi_sv,isced2011koulutusastetaso2nimi_en
+        ,isced2011koulutusalataso1koodi,isced2011koulutusalataso1nimi,isced2011koulutusalataso1nimi_sv,isced2011koulutusalataso1nimi_en
+        ,isced2011koulutusalataso2koodi,isced2011koulutusalataso2nimi,isced2011koulutusalataso2nimi_sv,isced2011koulutusalataso2nimi_en
+        ,isced2011koulutusalataso3koodi,isced2011koulutusalataso3nimi,isced2011koulutusalataso3nimi_sv,isced2011koulutusalataso3nimi_en
+        ,okmohjauksenalakoodi,okmohjauksenalanimi,okmohjauksenalanimi_sv,okmohjauksenalanimi_en
+        ,opintopolkuuri+url))
         conn.commit()
 
     cur.close()

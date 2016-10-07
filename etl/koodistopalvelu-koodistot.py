@@ -1,19 +1,18 @@
 #!/usr/bin/python
 
-from time import localtime, strftime
 import sys, os
-
 import httplib
+import pymssql
+import json
+from time import localtime, strftime
+
 opintopolkuuri = "virkailija.opintopolku.fi"
 httpconn = httplib.HTTPSConnection(opintopolkuuri)
 
-import json
-
-import pymssql
-server = os.getenv("PYMSSQL_TEST_SERVER")
-database = os.getenv("PYMSSQL_TEST_DATABASE")
-user = os.getenv("PYMSSQL_TEST_USERNAME")
-password = os.getenv("PYMSSQL_TEST_PASSWORD")
+dbhost = os.getenv("PYMSSQL_TEST_SERVER")
+dbname = os.getenv("PYMSSQL_TEST_DATABASE")
+dbuser = os.getenv("PYMSSQL_TEST_USERNAME")
+dbpass = os.getenv("PYMSSQL_TEST_PASSWORD")
 
 def haenimi(i,kieli):
     for m in i["metadata"]:
@@ -24,12 +23,12 @@ def haenimi(i,kieli):
 def main():
     print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" alkaa").encode('utf-8')
 
-    #print ("Connecting to database %s" % (database)).encode('utf-8')
-    conn = pymssql.connect(server, user, password, database)
+    #print ("Connecting to database %s" % (dbname)).encode('utf-8')
+    conn = pymssql.connect(dbhost, dbuser, dbpass, dbname)
     cur = conn.cursor()
 
     print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan sa_koodistot").encode('utf-8')
-    cur.execute("DELETE FROM sa_koodistot")
+    cur.execute("TRUNCATE TABLE sa_koodistot")
     conn.commit()
 
     koodistouri = "/koodisto-service/rest/json/%s/koodi"
@@ -85,7 +84,9 @@ def main():
             loppupvm = i["voimassaLoppuPvm"]
 
             #print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %s -- %d -- %s" % (koodisto,lkm,koodi)).encode('utf-8')
-            cur.execute("""INSERT INTO sa_koodistot (koodisto,koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm) VALUES (%s,%s,%s,%s,%s,%s,%s)""", (koodisto,koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm))
+            cur.execute("""
+            INSERT INTO sa_koodistot (koodisto,koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm ,source)
+            VALUES (%s,%s,%s,%s,%s,%s,%s ,%s)""", (koodisto,koodi,nimi,nimi_sv,nimi_en,alkupvm,loppupvm ,opintopolkuuri+url))
             conn.commit()
 
     cur.close()
