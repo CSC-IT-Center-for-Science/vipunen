@@ -7,40 +7,19 @@ import json
 from time import localtime, strftime
 
 # kantayhteysmuuttujat ympäristöasetuksista! (onhan asetettu?)
-server = os.getenv("PYMSSQL_TEST_SERVER")
-database = os.getenv("PYMSSQL_TEST_DATABASE")
-user = os.getenv("PYMSSQL_TEST_USERNAME")
-password = os.getenv("PYMSSQL_TEST_PASSWORD")
+dbhost = os.getenv("PYMSSQL_TEST_SERVER")
+dbname = os.getenv("PYMSSQL_TEST_DATABASE")
+dbuser = os.getenv("PYMSSQL_TEST_USERNAME")
+dbpass = os.getenv("PYMSSQL_TEST_PASSWORD")
 
 # best practices sarakkeet, joita ei tule lähteestä (vakioinen setti)
 columnlistignore = ["id","loadtime","source","username"]
 #... ja esim 'source' kannattaa/täytyy lisätä erikseen
 
-def main(argv):
+def load(secure,hostname,url,table):
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" begin"
   
-  # muuttujat jotka tulee antaa
-  secure = False
-  hostname = ""
-  url = ""
-  table = ""
-
-  try:
-    opts, args = getopt.getopt(argv,"sH:u:t:",["hostname=","url=","table="])
-  except getopt.GetoptError:
-    print ' -H <hostname> -u <url> -t <table>'
-    sys.exit(2)
-  for opt, arg in opts:
-    if opt in ("-s", "--secure"): secure = True
-    elif opt in ("-H", "--hostname"): hostname = arg
-    elif opt in ("-u", "--url"): url = arg
-    elif opt in ("-t", "--table"): table = arg
-  if not hostname: sys.exit(2)
-  if not url: sys.exit(2)
-  if not table: sys.exit(2)
-  
-  #print "Connecting to database %s" % (database)
-  conn = pymssql.connect(server, user, password, database)
+  conn = pymssql.connect(dbhost, dbuser, dbpass, dbname)
   cur = conn.cursor(as_dict=True)
   
   if secure:
@@ -110,6 +89,31 @@ def main(argv):
   conn.close()
   
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" ready"
+
+def main(argv):
+  # muuttujat jotka tulee antaa
+  secure = False
+  hostname,url,table = "","",""
+
+  try:
+    opts, args = getopt.getopt(argv,"sH:u:t:",["hostname=","url=","table="])
+  except getopt.GetoptError:
+    print ' [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table>'
+    sys.exit(2)
+  for opt, arg in opts:
+    if opt in ("-s", "--secure"): secure = True
+    elif opt in ("-H", "--hostname"): hostname = arg
+    elif opt in ("-u", "--url"): url = arg
+    elif opt in ("-t", "--table"): table = arg
+  if not hostname or not url or not table:
+    print ' [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table>'
+    sys.exit(2)
+  
+  if not dbhost or not dbname or not dbuser or not dbpass:
+    print "Missing database settings. Exiting."
+    sys.exit(2)
     
+  load(secure,hostname,url,table)
+      
 if __name__ == "__main__":
     main(sys.argv[1:])
