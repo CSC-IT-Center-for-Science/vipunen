@@ -69,7 +69,7 @@ def load(secure,hostname,url,table):
       conn.commit()
       # tyhjätään
       print strftime("%Y-%m-%d %H:%M:%S", localtime())+" delete %s" % (table)
-      cur.execute("DELETE FROM [%s]"%(table))
+      cur.execute("TRUNCATE TABLE [%s]"%(table))
       conn.commit()
       # tee sarakelistat
       cur.execute("SELECT TOP 0 * FROM [%s]"%(table))
