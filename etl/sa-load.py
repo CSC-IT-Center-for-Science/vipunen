@@ -38,24 +38,27 @@ def load(secure,hostname,url,table):
   placeholders = ""
   for i in j:
     cnt += 1
-    sqlcreate_beg = """
-    IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='"""+table+"""') BEGIN
-      CREATE TABLE """+table+"""(
-        id bigint IDENTITY(1,1) NOT NULL
-    """
-    sqlcreate_mid = ""
-    sqlcreate_end = """
-        ,loadtime datetime2(4) NOT NULL
-        ,source nvarchar(255) NULL
-        ,username nvarchar(128) NOT NULL
-        CONSTRAINT PK__"""+table+""" PRIMARY KEY CLUSTERED (id)
-      );
-      ALTER TABLE """+table+""" ADD CONSTRAINT DF__"""+table+"""__loadtime  DEFAULT (getdate()) FOR loadtime;
-      ALTER TABLE """+table+""" ADD CONSTRAINT DF__"""+table+"""__username  DEFAULT (suser_name()) FOR username;
-    END
-    """
-    # selvitä sarakkeet
+    # selvitä sarakkeet, luo taulu jos ei ole ja/tai tyhjennä taulu
+    # nb! vain ensimmäisestä palautetusta tiedosta, joten jos rajapinta
+    #     jättää null-arvot kokonaan pois vastauksesta,
+    #     tämä skripti ei toimi! (ks. esim virta-jtp julkaisut)
     if cnt == 1:
+      sqlcreate_beg = """
+      IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='"""+table+"""') BEGIN
+        CREATE TABLE """+table+"""(
+          id bigint IDENTITY(1,1) NOT NULL
+      """
+      sqlcreate_mid = ""
+      sqlcreate_end = """
+          ,loadtime datetime2(4) NOT NULL
+          ,source nvarchar(255) NULL
+          ,username nvarchar(128) NOT NULL
+          CONSTRAINT PK__"""+table+""" PRIMARY KEY CLUSTERED (id)
+        );
+        ALTER TABLE """+table+""" ADD CONSTRAINT DF__"""+table+"""__loadtime  DEFAULT (getdate()) FOR loadtime;
+        ALTER TABLE """+table+""" ADD CONSTRAINT DF__"""+table+"""__username  DEFAULT (suser_name()) FOR username;
+      END
+      """
       for k in i:
         # oletuksena merkkijono. tähän menee myös NoneType
         columntypes[str(k)] = 'nvarchar(255)'
@@ -69,11 +72,11 @@ def load(secure,hostname,url,table):
         elif type(i[k]) is float:
           columntypes[str(k)] = 'float'
         sqlcreate_mid += ", %s %s NULL"%(k,columntypes[str(k)])
+      print strftime("%Y-%m-%d %H:%M:%S", localtime())+" create and/or truncate %s" % (table)
       # luo taulu, jos ei ole
       cur.execute(sqlcreate_beg+sqlcreate_mid+sqlcreate_end)
       conn.commit()
       # tyhjätään
-      print strftime("%Y-%m-%d %H:%M:%S", localtime())+" delete %s" % (table)
       cur.execute("TRUNCATE TABLE [%s]"%(table))
       conn.commit()
       # tee sarakelistat
