@@ -63,6 +63,8 @@ def load(secure,hostname,url,table):
           columntypes[str(k)] = 'int'
         elif type(i[k]) is bool:
           columntypes[str(k)] = 'bit'
+        elif type(i[k]) is float:
+          columntypes[str(k)] = 'float'
         sqlcreate_mid += ", %s %s NULL"%(k,columntypes[str(k)])
       # luo taulu, jos ei ole
       cur.execute(sqlcreate_beg+sqlcreate_mid+sqlcreate_end)
