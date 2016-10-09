@@ -60,7 +60,7 @@ def load(secure,hostname,url,table):
         # oletuksena merkkijono. tähän menee myös NoneType
         columntypes[str(k)] = 'nvarchar(255)'
         if type(i[k]) is int:
-          if i[k] > 2^31:
+          if i[k] > 2**31:
             columntypes[str(k)] = 'bigint'
           else:
             columntypes[str(k)] = 'int'
