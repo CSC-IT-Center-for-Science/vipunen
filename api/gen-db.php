@@ -1,3 +1,4 @@
+<?php require 'auth.php'; ?>
 <?php
 // argumentit
 $taulu = "";
@@ -42,7 +43,7 @@ if (isset($_SERVER["HTTPS"])) {
     }
 }
 $query .= "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-if(!preg_match("/\/$/",$_SERVER[REQUEST_URI])) $query .= "/";
+if(!preg_match("/\/$/",$_SERVER['REQUEST_URI'])) $query .= "/";
 $query .= "'+tablename as uri ";
 
 $query .= <<<EOSQL

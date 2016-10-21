@@ -59,5 +59,5 @@ if ($type == "json") {
 }
 
 mssql_free_result($result);
-mssql_close($dbconn);
+mssql_close($link);
 ?>

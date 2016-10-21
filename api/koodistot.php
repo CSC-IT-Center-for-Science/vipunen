@@ -42,7 +42,7 @@ if (!$koodisto) {
         }
     }
     $query .= "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-    if(!preg_match("/\/$/",$_SERVER[REQUEST_URI])) $query .= "/";
+    if(!preg_match("/\/$/",$_SERVER['REQUEST_URI'])) $query .= "/";
     $query .= "'+koodisto as uri";
     $query .= " FROM SA_KOODISTOT";
 
@@ -87,5 +87,5 @@ if ($type == "json") {
 }
 
 mssql_free_result($result);
-mssql_close($dbconn);
+mssql_close($link);
 ?>
