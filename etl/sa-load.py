@@ -16,7 +16,7 @@ dbpass = os.getenv("PYMSSQL_TEST_PASSWORD")
 columnlistignore = ["id","loadtime","source","username"]
 #... ja esim 'source' kannattaa/täytyy lisätä erikseen
 
-def load(secure,hostname,url,table):
+def load(secure,hostname,url,table,debug):
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" begin"
   
   conn = pymssql.connect(dbhost, dbuser, dbpass, dbname)
@@ -88,7 +88,7 @@ def load(secure,hostname,url,table):
       columnstr = ",".join(columnlist)
       placeholders = ','.join(['%s' for s in columnlist])
 
-    #print strftime("%Y-%m-%d %H:%M:%S", localtime())+" %s"%(cnt)
+    if debug: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" %s"%(cnt)
     statement = "INSERT INTO [%s] (%s,source) VALUES (%s,'%s');" % (table,columnstr,placeholders,hostname+url)
     cur.execute(statement,tuple([i[s] for s in columnlist]))
     conn.commit()
@@ -101,27 +101,30 @@ def load(secure,hostname,url,table):
 def main(argv):
   # muuttujat jotka tulee antaa
   secure = False
-  hostname,url,table = "","",""
+  hostname,url,table,debug = "","","",0
 
   try:
-    opts, args = getopt.getopt(argv,"sH:u:t:",["hostname=","url=","table="])
+    opts, args = getopt.getopt(argv,"sH:u:t:d",["hostname=","url=","table=","debug"])
   except getopt.GetoptError:
-    print ' [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table>'
+    print ' [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-d|--debug]'
     sys.exit(2)
   for opt, arg in opts:
     if opt in ("-s", "--secure"): secure = True
     elif opt in ("-H", "--hostname"): hostname = arg
     elif opt in ("-u", "--url"): url = arg
     elif opt in ("-t", "--table"): table = arg
+    elif opt in ("-d", "--debug"): debug = 1
   if not hostname or not url or not table:
-    print ' [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table>'
+    print ' [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-d|--debug]'
     sys.exit(2)
+  
+  if debug: print "debugging"
   
   if not dbhost or not dbname or not dbuser or not dbpass:
     print "Missing database settings. Exiting."
     sys.exit(2)
     
-  load(secure,hostname,url,table)
+  load(secure,hostname,url,table,debug)
       
 if __name__ == "__main__":
     main(sys.argv[1:])
