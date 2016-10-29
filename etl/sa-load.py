@@ -104,9 +104,12 @@ def main(argv):
   hostname,url,table,debug = "","","",0
 
   try:
-    opts, args = getopt.getopt(argv,"sH:u:t:d",["hostname=","url=","table=","debug"])
-  except getopt.GetoptError:
-    print ' [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-d|--debug]'
+    opts, args = getopt.getopt(argv,"sH:u:t:d",["secure","hostname=","url=","table=","debug"])
+  except getopt.GetoptError as err:
+    # print help information and exit:
+    print(err) # will print something like "option -a not recognized"
+    usage()
+    #print 'sa-load.py [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-d|--debug]'
     sys.exit(2)
   for opt, arg in opts:
     if opt in ("-s", "--secure"): secure = True
@@ -115,7 +118,7 @@ def main(argv):
     elif opt in ("-t", "--table"): table = arg
     elif opt in ("-d", "--debug"): debug = 1
   if not hostname or not url or not table:
-    print ' [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-d|--debug]'
+    print 'Usage: sa-load.py [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-d|--debug]'
     sys.exit(2)
   
   if debug: print "debugging"
