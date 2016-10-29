@@ -98,6 +98,9 @@ def load(secure,hostname,url,table,debug):
   
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" ready"
 
+def usage():
+  print 'usage: sa-load.py [-s|--secure] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-d|--debug]'
+
 def main(argv):
   # muuttujat jotka tulee antaa
   secure = False
@@ -109,7 +112,6 @@ def main(argv):
     # print help information and exit:
     print(err) # will print something like "option -a not recognized"
     usage()
-    #print 'sa-load.py [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-d|--debug]'
     sys.exit(2)
   for opt, arg in opts:
     if opt in ("-s", "--secure"): secure = True
@@ -118,7 +120,7 @@ def main(argv):
     elif opt in ("-t", "--table"): table = arg
     elif opt in ("-d", "--debug"): debug = 1
   if not hostname or not url or not table:
-    print 'Usage: sa-load.py [-s] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-d|--debug]'
+    usage()
     sys.exit(2)
   
   if debug: print "debugging"
