@@ -24,13 +24,15 @@ def load(secure,hostname,url,table,debug):
   
   if secure:
     httpconn = httplib.HTTPSConnection(hostname)
+    print strftime("%Y-%m-%d %H:%M:%S", localtime())+" load securely from "+hostname+url
   else:
     httpconn = httplib.HTTPConnection(hostname)
+    print strftime("%Y-%m-%d %H:%M:%S", localtime())+" load from "+hostname+url
 
-  print strftime("%Y-%m-%d %H:%M:%S", localtime())+" load from "+hostname+url
   httpconn.request('GET', url)
   r = httpconn.getresponse()
   j = json.loads(r.read())
+  print strftime("%Y-%m-%d %H:%M:%S", localtime())+" got %d" % (len(j))
   cnt = 0
   columntypes = dict()
   columnlist = []
@@ -102,15 +104,15 @@ def usage():
   print 'usage: sa-load.py [-s|--secure] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-d|--debug]'
 
 def main(argv):
-  # muuttujat jotka tulee antaa
+  # muuttujat jotka kerrotaan argumentein
   secure = False
-  hostname,url,table,debug = "","","",0
+  hostname,url,table = "","",""
+  debug = 0
 
   try:
     opts, args = getopt.getopt(argv,"sH:u:t:d",["secure","hostname=","url=","table=","debug"])
   except getopt.GetoptError as err:
-    # print help information and exit:
-    print(err) # will print something like "option -a not recognized"
+    print(err)
     usage()
     sys.exit(2)
   for opt, arg in opts:
