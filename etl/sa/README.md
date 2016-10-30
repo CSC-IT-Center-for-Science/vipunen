@@ -1,4 +1,4 @@
-# Vipunen ETL
+# Vipunen ETL for Staging Area (SA)
 
 ..with Python and MS SQL
 
@@ -35,7 +35,7 @@ In CentOS installation via `yum` with dependencies(!) is sufficient and Python p
 
 ### SA Fact Loaders
 
-There is a generic fact loader script `sa.py` but it does not work on more sophisticated APIs that leave out fields based on null values or other reasons. See the script itself for more details.
+There is a generic fact loader script `load.py` but it does not work on more sophisticated APIs that leave out fields based on null values or other reasons. See the script itself for more details.
 
 One attempt towards figuring out columns on-the-fly has been made (see `dboperator.py` and function `columns`). This is not a complete generalization yet but could be sufficient enough for now.
 
