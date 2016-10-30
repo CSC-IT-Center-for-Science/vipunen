@@ -31,15 +31,19 @@ In CentOS installation via `yum` with dependencies(!) is sufficient and Python p
     * `[APINAME]_PASSWORD`
     * where `[APINAME]` is "ARVO" or "AIPAL" (should be generalized!)
 
-## SA
+## Loader scripts
 
-### SA Fact Loaders
+### Codesets and classifications
 
-There is a generic fact loader script `load.py` but it does not work on more sophisticated APIs that leave out fields based on null values or other reasons. See the script itself for more details.
+Nothing majorly specific in these scripts located under directory `koodisto`. Each classification script (filename contains word "luokitus") handles columns and data directly on their own since they all are specific in their content. But more generic script `koodistot.py` loads codesets with all having the same structure.
 
-One attempt towards figuring out columns on-the-fly has been made (see `dboperator.py` and function `columns`). This is not a complete generalization yet but could be sufficient enough for now.
+### Fact data
 
-Some fact loaders require data-specific handling still (see todo section below).
+There is a generic fact loader script `load.py` but it does not, or might not (changes have been made), work on more sophisticated APIs that leave out fields based on null values or other reasons. See the script itself for more details.
+
+One attempt towards figuring out columns on-the-fly has been made (see `dboperator.py` and its function `columns`). This is not a complete generalization yet but could be sufficient enough for now.
+
+Some fact loaders require data specific handling still (see todo section below).
 
 ## TODO
 * Database connection variable naming.
