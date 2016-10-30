@@ -23,18 +23,18 @@ def load(secure,hostname,url,table,verbose=False,debug=False):
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" got %d" % (len(j))
   # selvitä sarakkeet; luupataan kaikki! (voisi parametroida...)
   for row in j:
-    db-operator.columns(row,debug)
+    dboperator.columns(row,debug)
 
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" create and/or truncate %s" % (table)
-  db-operator.create(table,debug)
+  dboperator.create(table,debug)
   cnt = 0
   for row in j:
     cnt += 1
     if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" %d" % (cnt)
-    db-operator.insert(hostname+url,table,row,debug)
+    dboperator.insert(hostname+url,table,row,debug)
 
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" wrote %d" % (cnt)
-  db-operator.close(debug)
+  dboperator.close(debug)
 
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" ready"
 

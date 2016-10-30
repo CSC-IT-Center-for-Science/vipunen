@@ -37,7 +37,7 @@ In CentOS installation via `yum` with dependencies(!) is sufficient and Python p
 
 There is a generic fact loader script `sa-load.py` but it does not work on more sophisticated APIs that leave out fields based on null values or other reasons. See the script itself for more details.
 
-One attempt towards figuring out columns on-the-fly has been made (see `db-operator.py` and function `columns`). This is not a complete generalization yet but could be sufficient enough for now.
+One attempt towards figuring out columns on-the-fly has been made (see `dboperator.py` and function `columns`). This is not a complete generalization yet but could be sufficient enough for now.
 
 Some fact loaders require data-specific handling still (see todo section below).
 

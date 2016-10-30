@@ -56,14 +56,14 @@ def columns(row,debug=False):
       columntypes[str(col)] = 'bit'
     elif type(row[col]) is float:
       columntypes[str(col)] = 'float'
-    if debug: print "db-operator.columns: col:%s, type:%s, columntype:%s" % (col,type(row[col]),columntypes[str(col)])
+    if debug: print "dboperator.columns: col:%s, type:%s, columntype:%s" % (col,type(row[col]),columntypes[str(col)])
     # lisää sarakelistaan
     if col not in columnlist:
       columnlist.append(col)
   for ignr in columnlistignore:
     if ignr in columnlist:
       columnlist.remove(ignr)
-  if debug: print "db-operator.columns: columnlist="+(",".join(columnlist))
+  if debug: print "dboperator.columns: columnlist="+(",".join(columnlist))
 
 # create - luo taulu jos ei ole ja/tai tyhjennä taulu
 # nb! sarakkeet ja saraketyypit tulee tuntea jo (ks. columns)
@@ -93,13 +93,13 @@ def create(table,debug=False):
   # tyhjätään
   cur.execute("TRUNCATE TABLE [%s]"%(table))
   conn.commit()
-  if debug: print "db-operator.create: columnlist="+(",".join(columnlist))
+  if debug: print "dboperator.create: columnlist="+(",".join(columnlist))
 
 # insert - vie rivin (tietueen) tiedot tauluun
 # nb! sarakkeet tulee tuntea jo (ks. columns)
 def insert(source,table,row,debug=False):
   global conn, cur, columnlist
-  if debug: print "db-operator.insert: columnlist="+(",".join(columnlist))
+  if debug: print "dboperator.insert: columnlist="+(",".join(columnlist))
   columnstr = ",".join(columnlist)
   placeholders = ','.join(['%s' for s in columnlist])
 
@@ -109,6 +109,6 @@ def insert(source,table,row,debug=False):
 
 def close(debug=False):
   global conn, cur
-  if debug: print "db-operator.close: closing"
+  if debug: print "dboperator.close: closing"
   cur.close()
   conn.close()
