@@ -5,7 +5,7 @@ import httplib
 import json
 from time import localtime, strftime
 
-import db-operator
+import dboperator
 
 def load(secure,hostname,url,table,verbose=False,debug=False):
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" begin"
