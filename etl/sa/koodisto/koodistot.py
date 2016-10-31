@@ -6,7 +6,7 @@ import pymssql
 import json
 from time import localtime, strftime
 
-opintopolkuuri = "virkailija.opintopolku.fi"
+opintopolkuuri = "testi.virkailija.opintopolku.fi"
 httpconn = httplib.HTTPSConnection(opintopolkuuri)
 
 dbhost = os.getenv("PYMSSQL_TEST_SERVER")
@@ -65,6 +65,8 @@ def main():
         ,"oppilaitosnumero"
         ,"oppilaitostyyppi"
         ,"koulutustoimija"
+        # vipunen
+        ,"vipunenkorkeakouluoppilaitosmap"
     ]
     for koodisto in koodistot:
         url = koodistouri % koodisto
