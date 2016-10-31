@@ -67,6 +67,7 @@ def main():
         ,"koulutustoimija"
         # vipunen
         ,"vipunenkorkeakouluoppilaitosmap"
+        ,"vipunenkoulutustyyppi"
     ]
     for koodisto in koodistot:
         url = koodistouri % koodisto
