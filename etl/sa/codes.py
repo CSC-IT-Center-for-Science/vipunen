@@ -3,7 +3,7 @@
 """
 codes
 
-doc todo
+todo doc
 """
 import sys, getopt
 import httplib
@@ -21,7 +21,7 @@ def haenimi(i,kieli):
 def load(secure,hostname,url,table,codeset,verbose=False,debug=False):
   if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" begin"
   
-  # tehdään "columnlist" erikseen itse (type ei merkitystä)
+  # tehdään "columnlist" erikseen itse (type ei merkitystä, ei tehdä taulua vaan se on jo)
   row = {'koodisto':None,'koodi':None,'nimi':None,'nimi_sv':None,'nimi_en':None,'alkupvm':None,'loppupvm':None}
   # tämä kutsu alustaa dboperatorin muuttujat, jotta insert-kutsu toimii
   dboperator.columns(row,debug)
@@ -58,7 +58,7 @@ def load(secure,hostname,url,table,codeset,verbose=False,debug=False):
     if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %s -- %d -- %s"%(codeset,lkm,row["koodi"])
     dboperator.insert(hostname+url,table,row,debug)
 
-  dboperator.close()
+  dboperator.close(debug)
 
   if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" ready"
 

@@ -3,7 +3,7 @@
 """
 load
 
-doc todo
+todo doc
 """
 import sys,getopt
 import httplib
