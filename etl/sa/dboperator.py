@@ -1,5 +1,17 @@
 #!/usr/bin/python
 # vim: set fileencoding=UTF-8 :
+"""
+dboperator
+
+Muodostaa yhteyden MS SQL Server tietokantaan, luo ja tyhjentää tauluja sekä
+vie dataa riveittäin. Tarjoaa myös yhteyden sulkevan funktion, jota on syytä
+muistaa kutsua operaatioiden lopuksi.
+
+Erityislisäpalveluna, joka on kyllä toistaiseksi sisäänrakennettuna koko
+moduuliin, on funktio columns, joka saamastaan "rivi" tiedosta (alun perin
+json-tyyppinen objekti) päättelee sarakkeiden nimet sekä sarakkeiden
+tietotyypit.
+"""
 import sys,os
 import pymssql
 
@@ -41,7 +53,6 @@ columnlistignore = ["id","loadtime","source","username"]
 #  ideana on siis, että ennen create ja insert kutsuja voisi luupata
 #  vaikka koko datasetin läpi niin, että kaikki mahdolliset sarakkeet
 #  on selvillä ja vasta sitten luo taulun ja vie datan...
-#
 def columns(row,debug=False):
   global columntypes, columnlist, columnlistignore
   for col in row:
@@ -91,9 +102,22 @@ def create(table,debug=False):
   cur.execute(sqlcreate_beg+sqlcreate_mid+sqlcreate_end)
   conn.commit()
   # tyhjätään
+  empty(table,debug)
+  if debug: print "dboperator.create: columnlist="+(",".join(columnlist))
+
+# empty - tyhjennä taulu truncate-operaatiolla
+def empty(table,debug=False):
+  global conn, cur
+  if debug: print "dboperator.empty: %s"%(table)
   cur.execute("TRUNCATE TABLE [%s]"%(table))
   conn.commit()
-  if debug: print "dboperator.create: columnlist="+(",".join(columnlist))
+
+# remove - poista rivejä taulusta annetulla ehdolla (column==value)
+def remove(table,column,value,debug=False):
+  global conn, cur
+  if debug: print "dboperator.remove: table=%s column=%s value=%s"%(table,column,value)
+  cur.execute("DELETE FROM [%s] WHERE %s='%s'"%(table,column,value))
+  conn.commit()
 
 # insert - vie rivin (tietueen) tiedot tauluun
 # nb! sarakkeet tulee tuntea jo (ks. columns)

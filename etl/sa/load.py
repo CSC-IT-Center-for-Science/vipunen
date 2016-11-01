@@ -1,5 +1,10 @@
 #!/usr/bin/python
 # vim: set fileencoding=UTF-8 :
+"""
+load
+
+doc todo
+"""
 import sys,getopt
 import httplib
 import json
@@ -30,7 +35,7 @@ def load(secure,hostname,url,table,verbose=False,debug=False):
   cnt = 0
   for row in j:
     cnt += 1
-    if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" %d" % (cnt)
+    if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" %d -- %s" % (cnt,row)
     dboperator.insert(hostname+url,table,row,debug)
 
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" wrote %d" % (cnt)
