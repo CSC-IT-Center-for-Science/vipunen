@@ -33,9 +33,11 @@ In CentOS installation via `yum` with dependencies(!) is sufficient and Python p
 
 ## Loader scripts
 
+For the purpose of these staging area data loading scripts there has been made a generic `dboperator.py` script. What is special about this script is that it requires those environment variables mentioned above, it opens database connection at init, and there is a function called `columns` that must be always called before any insert statements as it sets up column information to the module. When `dboperator` is used via codesets and classifications the column types are not handled. These tables (for dimensions if you will) are assumed to be in database already. It is just the opposite for fact tables which are (re-)created at each data load call (except for few facts which still have their own data loading scripts, see below).
+
 ### Codesets and classifications
 
-Nothing majorly specific in these scripts located under directory `koodisto`. Each classification script (filename contains word "luokitus") handles columns and data directly on their own since they all are specific in their content. But more generic script `koodistot.py` loads codesets with all having the same structure.
+Each classification script (filename contains word "luokitus") handles columns and data directly on their own since they all are specific in their content. But a more generic script `codes.py` loads codesets which all have the same structure and are loaded in the same database table.
 
 ### Fact data
 
