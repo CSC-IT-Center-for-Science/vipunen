@@ -18,33 +18,37 @@ def haenimi(i,kieli):
       return m["nimi"]
   return None
 
-def load(secure,hostname,url,table,codeset,verbose=False,debug=False):
-  if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" begin"
-  
+def show(message):
+  print strftime("%Y-%m-%d %H:%M:%S", localtime())+" "+message
+
+def load(secure,hostname,url,table,codeset,verbose=False):
+  if verbose: show("begin")
+
   # tehdään "columnlist" erikseen itse (type ei merkitystä, ei tehdä taulua vaan se on jo)
   row = {'koodisto':None,'koodi':None,'nimi':None,'nimi_sv':None,'nimi_en':None,'alkupvm':None,'loppupvm':None}
   # tämä kutsu alustaa dboperatorin muuttujat, jotta insert-kutsu toimii
-  dboperator.columns(row,debug)
-  
-  #print strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan sa_koodistot"
+  dboperator.columns(row)
+
+  #show("empty sa_koodistot")
   #dboperator.empty("sa_koodistot")
 
   url = url % codeset
+  address = hostname+url
   if secure:
+    show("load securely from "+address)
     httpconn = httplib.HTTPSConnection(hostname)
-    print strftime("%Y-%m-%d %H:%M:%S", localtime())+" load securely from "+hostname+url
   else:
+    show("load from "+address)
     httpconn = httplib.HTTPConnection(hostname)
-    print strftime("%Y-%m-%d %H:%M:%S", localtime())+" load from "+hostname+url
 
   httpconn.request('GET', url)
   r = httpconn.getresponse()
   j = json.loads(r.read())
-  lkm = 0
-  if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" delete from %s where koodisto=%s"%(table,codeset)
+  cnt = 0
+  if verbose: show("delete from %s where koodisto=%s"%(table,codeset))
   dboperator.remove(table,"koodisto",codeset)
   for i in j:
-    lkm += 1
+    cnt += 1
     # tee "row"
     row["koodisto"] = codeset
     # sarakkeet
@@ -55,16 +59,16 @@ def load(secure,hostname,url,table,codeset,verbose=False,debug=False):
     row["alkupvm"] = i["voimassaAlkuPvm"]
     row["loppupvm"] = i["voimassaLoppuPvm"]
 
-    if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %s -- %d -- %s"%(codeset,lkm,row["koodi"])
-    dboperator.insert(hostname+url,table,row,debug)
+    if verbose: show("-- %s -- %d -- %s"%(codeset,cnt,row["koodi"]))
+    dboperator.insert(address,table,row)
 
-  dboperator.close(debug)
+  dboperator.close()
 
-  if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" ready"
+  if verbose: show("ready")
 
 def usage():
   print """
-usage: koodistot.py [-s|--secure] [-H|--hostname <hostname>] [-u|--url <url>] [-t|--table <table>] -c|--codeset <codeset> [-v|--verbose] [-d|--debug]
+usage: codes.py [-s|--secure] [-H|--hostname <hostname>] [-u|--url <url>] [-t|--table <table>] -c|--codeset <codeset> [-v|--verbose]
 
 secure defaults to being secure (HTTPS) (so no point in using this argument at all)
 hostname defaults to "testi.virkailija.opintopolku.fi"
@@ -80,10 +84,10 @@ def main(argv):
   url = "/koodisto-service/rest/json/%s/koodi" # url oletuksella (nb %s)
   table = "sa_koodistot" # table oletuksella
   codeset = ""
-  verbose,debug = False,False
-  
+  verbose = False
+
   try:
-    opts, args = getopt.getopt(argv,"sH:u:t:c:vd",["secure","hostname=","url=","table=","codeset=","verbose","debug"])
+    opts, args = getopt.getopt(argv,"sH:u:t:c:vd",["secure","hostname=","url=","table=","codeset=","verbose"])
   except getopt.GetoptError as err:
     print(err)
     usage()
@@ -95,14 +99,11 @@ def main(argv):
     elif opt in ("-t", "--table"): table = arg
     elif opt in ("-c", "--codeset"): codeset = arg
     elif opt in ("-v", "--verbose"): verbose = True
-    elif opt in ("-d", "--debug"): debug = True
   if not hostname or not url or not table or not codeset:
     usage()
     sys.exit(2)
 
-  if debug: print "debugging"
-
-  load(secure,hostname,url,table,codeset,verbose,debug)
+  load(secure,hostname,url,table,codeset,verbose)
 
 if __name__ == "__main__":
   main(sys.argv[1:])
