@@ -3,9 +3,9 @@
 """
 callsp
 
-Vipunen DW ETL
-
 Call a stored procedure in database.
+
+Depends on dboperator which takes care of connection and other db stuff.
 """
 import sys,getopt
 from time import localtime, strftime
@@ -18,19 +18,13 @@ def show(message):
 def load(schema,procedure,verbose=False):
   show("begin with "+schema+" "+procedure)
 
-  # selvitä sarakkeet; luupataan kaikki! (voisi parametroida...)
-  #dboperator.columns(row)
-  # sarakelista koodistosta
   sql = "execute "+schema+"."+procedure
   try:
     dboperator.execute(sql)
   except:
-    # lopetus vai ?
-    #"""
-    show("Something went wrong. Over and out.")
+    show("Something went wrong. Probably procedure wasn't found or there is a permission problem. Over and out.")
     dboperator.close()
-    exit(2) # lopeta virheeseen?
-    #"""
+    exit(2) # lopeta virheeseen
 
   dboperator.close()
 
@@ -38,9 +32,10 @@ def load(schema,procedure,verbose=False):
 
 def usage():
   print """
-usage: dimension.py [-s|--schema <schema>] -p|--procedure <procedure> [-v|--verbose]
+usage: callsp.py [-s|--schema <schema>] -p|--procedure <procedure> [-v|--verbose]
 
-schema defaults to dbo
+schema defaults to dbo.
+procedure is mandatory argument. Name of the procedure to execute.
 """
 
 def main(argv):
@@ -56,7 +51,7 @@ def main(argv):
     usage()
     sys.exit(2)
   for opt, arg in opts:
-    if opt in ("-s", "--schematable"): schema = arg
+    if opt in ("-s", "--schema"): schema = arg
     elif opt in ("-p", "--procedure"): procedure = arg
     elif opt in ("-v", "--verbose"): verbose = True
   if not procedure:
@@ -66,4 +61,4 @@ def main(argv):
   load(schema,procedure,verbose)
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+  main(sys.argv[1:])
