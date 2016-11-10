@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_aipal_valtakunnallinen') BEGIN
+
 CREATE TABLE [dbo].[sa_aipal_valtakunnallinen](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[taustakysymys_aiempi_tilanne] [nvarchar](max) NULL,
@@ -52,9 +54,11 @@ CREATE TABLE [dbo].[sa_aipal_valtakunnallinen](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_aipal_valtakunnallinen] ADD  CONSTRAINT [DF__sa_aipal_valtakunnallinen__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_aipal_valtakunnallinen] ADD  CONSTRAINT [DF__sa_aipal_valtakunnallinen__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END

@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_oiva_valos') BEGIN
+
 CREATE TABLE [dbo].[sa_oiva_valos](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[erit_valma] [bit] NULL,
@@ -30,9 +32,11 @@ CREATE TABLE [dbo].[sa_oiva_valos](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_oiva_valos] ADD  CONSTRAINT [DF__sa_oiva_valos__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_oiva_valos] ADD  CONSTRAINT [DF__sa_oiva_valos__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END

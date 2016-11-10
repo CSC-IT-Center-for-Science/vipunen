@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_arvo_valtakunnallinen') BEGIN
+
 CREATE TABLE [dbo].[sa_arvo_valtakunnallinen](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[koulutustoimija] [nvarchar](max) NULL,
@@ -47,9 +49,11 @@ CREATE TABLE [dbo].[sa_arvo_valtakunnallinen](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_arvo_valtakunnallinen] ADD  CONSTRAINT [DF__sa_arvo_valtakunnallinen__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_arvo_valtakunnallinen] ADD  CONSTRAINT [DF__sa_arvo_valtakunnallinen__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END

@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_koulutusluokitus') BEGIN
+
 CREATE TABLE [dbo].[sa_koulutusluokitus](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[koodi] [nvarchar](6) NOT NULL,
@@ -78,9 +80,11 @@ CREATE TABLE [dbo].[sa_koulutusluokitus](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_koulutusluokitus] ADD  CONSTRAINT [DF__sa_koulutusluokitus__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_koulutusluokitus] ADD  CONSTRAINT [DF__sa_koulutusluokitus__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END

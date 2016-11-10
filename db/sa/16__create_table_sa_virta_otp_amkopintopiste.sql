@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_virta_otp_amkopintopiste') BEGIN
+
 CREATE TABLE [dbo].[sa_virta_otp_amkopintopiste](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[avoinKK] [float] NULL,
@@ -29,9 +31,11 @@ CREATE TABLE [dbo].[sa_virta_otp_amkopintopiste](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_virta_otp_amkopintopiste] ADD  CONSTRAINT [DF__sa_virta_otp_amkopintopiste__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_virta_otp_amkopintopiste] ADD  CONSTRAINT [DF__sa_virta_otp_amkopintopiste__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END

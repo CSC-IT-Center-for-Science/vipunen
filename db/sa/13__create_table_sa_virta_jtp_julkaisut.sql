@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_virta_jtp_julkaisut') BEGIN
+
 CREATE TABLE [dbo].[sa_virta_jtp_julkaisut](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[julkaisunTunnus] [nvarchar](30) NULL,
@@ -24,9 +26,11 @@ CREATE TABLE [dbo].[sa_virta_jtp_julkaisut](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_virta_jtp_julkaisut] ADD  CONSTRAINT [DF__sa_virta_jtp_julkaisut__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_virta_jtp_julkaisut] ADD  CONSTRAINT [DF__sa_virta_jtp_julkaisut__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END

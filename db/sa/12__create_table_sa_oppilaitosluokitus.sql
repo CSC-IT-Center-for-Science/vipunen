@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_oppilaitosluokitus') BEGIN
+
 CREATE TABLE [dbo].[sa_oppilaitosluokitus](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[oid] [nvarchar](200) NULL,
@@ -22,9 +24,11 @@ CREATE TABLE [dbo].[sa_oppilaitosluokitus](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_oppilaitosluokitus] ADD  CONSTRAINT [DF__sa_oppilaitosluokitus__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_oppilaitosluokitus] ADD  CONSTRAINT [DF__sa_oppilaitosluokitus__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END

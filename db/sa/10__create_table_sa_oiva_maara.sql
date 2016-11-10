@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_oiva_maara') BEGIN
+
 CREATE TABLE [dbo].[sa_oiva_maara](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[alkupvm] [nvarchar](255) NULL,
@@ -30,9 +32,11 @@ CREATE TABLE [dbo].[sa_oiva_maara](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_oiva_maara] ADD  CONSTRAINT [DF__sa_oiva_maara__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_oiva_maara] ADD  CONSTRAINT [DF__sa_oiva_maara__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END

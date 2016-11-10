@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_alueluokitus') BEGIN
+
 CREATE TABLE [dbo].[sa_alueluokitus](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[koodi] [nvarchar](3) NOT NULL,
@@ -42,9 +44,11 @@ CREATE TABLE [dbo].[sa_alueluokitus](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_alueluokitus] ADD  CONSTRAINT [DF__sa_alueluokitus__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_alueluokitus] ADD  CONSTRAINT [DF__sa_alueluokitus__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END

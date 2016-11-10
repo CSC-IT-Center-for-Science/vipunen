@@ -4,15 +4,15 @@
 -- ajo onnistuu luonnollisesti vain tunnuksella jolla on oikeus luoda käyttäjiä
 -- kierretään asia nyt sillä, että koko roska on tämän olemassaolo-iffin sisällä
 
-IF NOT EXISTS (select * from sys.user_token where name='LJquicktest') BEGIN
+IF NOT EXISTS (select * from sys.user_token where name='t_sql16_etl') BEGIN
 
-CREATE USER [LJquicktest] FOR LOGIN [LJquicktest] WITH DEFAULT_SCHEMA=[dbo]
+CREATE USER [t_sql16_etl] FOR LOGIN [t_sql16_etl] WITH DEFAULT_SCHEMA=[dbo]
 ;--GO
-ALTER ROLE [db_ddladmin] ADD MEMBER [LJquicktest]
+ALTER ROLE [db_ddladmin] ADD MEMBER [t_sql16_etl]
 ;--GO
-ALTER ROLE [db_datareader] ADD MEMBER [LJquicktest]
+ALTER ROLE [db_datareader] ADD MEMBER [t_sql16_etl]
 ;--GO
-ALTER ROLE [db_datawriter] ADD MEMBER [LJquicktest]
+ALTER ROLE [db_datawriter] ADD MEMBER [t_sql16_etl]
 ;--GO
 
 END

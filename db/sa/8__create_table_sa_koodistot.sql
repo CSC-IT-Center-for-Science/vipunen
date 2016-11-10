@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_koodistot') BEGIN
+
 CREATE TABLE [dbo].[sa_koodistot](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[koodisto] [nvarchar](100) NOT NULL,
@@ -15,9 +17,11 @@ CREATE TABLE [dbo].[sa_koodistot](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_koodistot] ADD  CONSTRAINT [DF__sa_koodistot__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_koodistot] ADD  CONSTRAINT [DF__sa_koodistot__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END

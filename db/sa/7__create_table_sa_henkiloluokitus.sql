@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_henkiloluokitus') BEGIN
+
 CREATE TABLE [dbo].[sa_henkiloluokitus](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[sukupuoli_koodi] [nvarchar](2) NOT NULL,
@@ -17,9 +19,11 @@ CREATE TABLE [dbo].[sa_henkiloluokitus](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_henkiloluokitus] ADD  CONSTRAINT [DF__sa_henkiloluokitus__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_henkiloluokitus] ADD  CONSTRAINT [DF__sa_henkiloluokitus__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END

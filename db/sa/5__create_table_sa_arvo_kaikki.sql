@@ -1,3 +1,5 @@
+IF NOT EXISTS (select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_arvo_kaikki') BEGIN
+
 CREATE TABLE [dbo].[sa_arvo_kaikki](
 	[id] [bigint] IDENTITY(1,1) NOT NULL,
 	[koulutustoimija] [nvarchar](max) NULL,
@@ -47,9 +49,11 @@ CREATE TABLE [dbo].[sa_arvo_kaikki](
 	[id] ASC
 )
 )
-GO
+;--GO
 
 ALTER TABLE [dbo].[sa_arvo_kaikki] ADD  CONSTRAINT [DF__sa_arvo_kaikki__loadtime]  DEFAULT (getdate()) FOR [loadtime]
-GO
+;--GO
 ALTER TABLE [dbo].[sa_arvo_kaikki] ADD  CONSTRAINT [DF__sa_arvo_kaikki__username]  DEFAULT (suser_name()) FOR [username]
-GO
+;--GO
+
+END
