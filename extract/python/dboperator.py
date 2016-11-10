@@ -27,10 +27,10 @@ import pymssql
 # keskeytetään koko ohjelman suorittaminen!
 
 # kantayhteysmuuttujat ympäristöasetuksista! (onhan asetettu?)
-dbhost = os.getenv("PYMSSQL_TEST_SERVER")
-dbname = os.getenv("PYMSSQL_TEST_DATABASE")
-dbuser = os.getenv("PYMSSQL_TEST_USERNAME")
-dbpass = os.getenv("PYMSSQL_TEST_PASSWORD")
+dbhost = os.getenv("DATABASE_HOST")
+dbname = os.getenv("DATABASE_NAME")
+dbuser = os.getenv("DATABASE_USER")
+dbpass = os.getenv("DATABASE_PASS")
 if not dbhost or not dbname or not dbuser or not dbpass:
   print "Missing database settings. Exiting."
   sys.exit(2)
