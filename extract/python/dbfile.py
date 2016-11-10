@@ -33,7 +33,7 @@ def load(wildpath,verbose=False):
     sql = fd.read()
     fd.close()
     if verbose: show(sql)
-    dboperator.execute(sql,True)
+    dboperator.execute(sql)
       
   show("ready")
 
