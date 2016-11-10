@@ -16,7 +16,7 @@ def show(message):
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" "+message
 
 def load(schema,procedure,verbose=False):
-  show("begin")
+  show("begin with "+schema+" "+procedure)
 
   # selvitä sarakkeet; luupataan kaikki! (voisi parametroida...)
   #dboperator.columns(row)
