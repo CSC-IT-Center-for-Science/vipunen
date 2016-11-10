@@ -11,10 +11,11 @@ httpconn = httplib.HTTPSConnection(sourcehostname)
 import json
 
 import pymssql
-server = os.getenv("PYMSSQL_TEST_SERVER")
-database = os.getenv("PYMSSQL_TEST_DATABASE")
-user = os.getenv("PYMSSQL_TEST_USERNAME")
-password = os.getenv("PYMSSQL_TEST_PASSWORD")
+server = os.getenv("DATABASE_HOST")
+database = os.getenv("DATABASE_NAME")
+user = os.getenv("DATABASE_USER")
+password = os.getenv("DATABASE_PASS")
+# muuten dboperator, mutta koko tämä skripti olisi tarkoitus hoitaa load.py-skriptillä
 
 # hae avaimen arvo json:sta 
 def jv(jsondata, key):
