@@ -15,8 +15,8 @@ import dboperator
 def show(message):
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" "+message
 
-def load(secure,hostname,url,table,begindate,enddate,post,verbose):
-  show("begin")
+def load(secure,hostname,url,table,postdata,condition,verbose):
+  show("begin "+hostname+" "+url+" "+table+" "+postdata+" "+condition)
   address=hostname+url
   if secure:
     show("load securely from "+address)
@@ -26,9 +26,10 @@ def load(secure,hostname,url,table,begindate,enddate,post,verbose):
     httpconn=httplib.HTTPConnection(hostname)
 
   # api-yhteysmuuttujat ympäristöasetuksista! (onhan asetettu?)
-  if post:
+  # nb! post-operaatioon data saadaan python-placeholder-merkkijono.
+  # tämä on sarakkeita/tietokenttiä nimetty. Voisiko post-parametriä käyttää?
+  if postdata:
     headers=""
-    postdata='{"alkupvm": "%s", "loppupvm": "%s"}'%(begindate,enddate)
     if os.getenv("API_USERNAME"):
       apiuser = os.getenv("API_USERNAME")
       apipass = os.getenv("API_PASSWORD")
@@ -40,20 +41,21 @@ def load(secure,hostname,url,table,begindate,enddate,post,verbose):
   r=httpconn.getresponse()
   j=json.loads(r.read())
   show("api returned %d objects"%(len(j)))
-  # selvitä sarakkeet; luupataan kaikki! (voisi parametroida...)
+  # selvitä sarakkeet; luupataan kaikki!
+  # (voisi parametroida tai rajoittaa jotenkin...)
   for row in j:
     dboperator.columns(row)
 
-  ### TODO TODO TODO alkupvm jotenkin geneerisesti vaikuttamaan kannasta poistamiseen
-  ### tai sitten "merge", eli katso mitä ei vielä ole kannassa...
-  if post:
-    show("remove all after %s from %s"%(begindate,table))
-    dboperator.execute("DELETE FROM [%s] WHERE vastausaika>='%s'"%(table,begindate))
+  # tietojen poistaminen ehdolla
+  # merge-operaatio voisi tulla kyseeseen, eli katso mitä ei vielä ole kannassa...
+  if condition:
+    show("remove from %s with condition '%s'"%(table,condition))
+    dboperator.execute("DELETE FROM %s WHERE %s"%(table,condition))
   else:
     show("create and/or empty %s"%(table))
     dboperator.create(table)
 
-
+  show("insert data")
   cnt=0
   for row in j:
     cnt+=1
@@ -67,21 +69,19 @@ def load(secure,hostname,url,table,begindate,enddate,post,verbose):
 
 def usage():
   print """
-usage: load.py [-s|--secure] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-b|--begindate <pvm>] [-e|--enddate <pvm>] [-p|--postdata] [-v|--verbose]
+usage: load.py [-s|--secure] -H|--hostname <hostname> -u|--url <url> -t|--table <table> [-p|--postdata] [-c|--condition <condition>] [-v|--verbose]
 """
 
 def main(argv):
   # muuttujat jotka kerrotaan argumentein
   secure=False
   hostname,url,table="","",""
-  # set defaults, which are used only if arguments are given so
-  begindate="%d-%02d-01" % (localtime().tm_year,(localtime().tm_mon-1))
-  enddate=strftime("%Y-%m-%d",localtime())
-  postdata=False
+  postdata=""
+  condition=""
   verbose=False
 
   try:
-    opts,args=getopt.getopt(argv,"sH:u:t:b:e:pv",["secure","hostname=","url=","table=","begindate=","enddate=","postdata","verbose"])
+    opts,args=getopt.getopt(argv,"sH:u:t:p:c:v",["secure","hostname=","url=","table=","postdata=","condition=","verbose"])
   except getopt.GetoptError as err:
     print(err)
     usage()
@@ -91,15 +91,14 @@ def main(argv):
     elif opt in ("-H", "--hostname"): hostname=arg
     elif opt in ("-u", "--url"): url=arg
     elif opt in ("-t", "--table"): table=arg
-    elif opt in ("-b", "--begindate"): begindate=arg
-    elif opt in ("-e", "--enddate"): enddate=arg
-    elif opt in ("-p", "--postdata"): postdata=True
+    elif opt in ("-p", "--postdata"): postdata=arg
+    elif opt in ("-c", "--condition"): condition=arg
     elif opt in ("-v", "--verbose"): verbose=True
   if not hostname or not url or not table:
     usage()
     sys.exit(2)
 
-  load(secure,hostname,url,table,begindate,enddate,postdata,verbose)
+  load(secure,hostname,url,table,postdata,condition,verbose)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
