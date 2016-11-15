@@ -3,8 +3,7 @@
 """
 dbfile
 
-From path given as argument with possibility to give wildcards executes
-SQL files in naturally sorted order (1,2,3,...,10,11,...) to database
+From a file given as argument executes SQL file contents to database
 which is pointed out via environment variables.
 
 This script depends on script dboperator.
@@ -19,50 +18,42 @@ import dboperator
 def show(message):
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" "+message
 
-def load(wildpath,verbose=False):
-  show("begin "+wildpath)
+def load(sqlfile,verbose=False):
+  show("begin "+sqlfile)
 
-  sqlfiles = glob.glob(wildpath)
-  # sortataan tiedoston nimen määrätyn osuuden mukaan:
-  sortedsqlfiles = sorted(sqlfiles, key=lambda x: int(x.split('/')[x.count("/")].split('__')[0]))
-  cnt = 0
-  for sqlfile in sortedsqlfiles:
-    cnt += 1
-    show("%s -- %s"%(cnt,sqlfile))
-    fd = open(sqlfile, 'r')
-    sql = fd.read()
-    fd.close()
-    if verbose: show(sql)
-    dboperator.execute(sql)
-      
+  fd = open(sqlfile, 'r')
+  sql = fd.read()
+  fd.close()
+  if verbose: show(sql)
+  dboperator.execute(sql)
+  
+  dboperator.close()    
   show("ready")
 
 def usage():
   print """
-usage: dbfile.py [-w|--wildpath] [-v|--verbose]
-
-wildpath defaults to "vipunen/db/sa/*.sql" (repository). A wildcarded path for SQL files to be executed.
+usage: dbfile.py [-f|--file <file>] [-v|--verbose]
 """
 
 def main(argv):
   # muuttujat jotka kerrotaan argumentein
-  wildpath = "vipunen/db/sa/*.sql" # tiedostojen etsivä wildcard-polku oletuksella
+  sqlfile = ""
   verbose = False
   
   try:
-    opts, args = getopt.getopt(argv,"w:v",["wildpath=","verbose"])
+    opts, args = getopt.getopt(argv,"f:v",["file=","verbose"])
   except getopt.GetoptError as err:
     print(err)
     usage()
     sys.exit(2)
   for opt, arg in opts:
-    if opt in ("-w", "--wildpath"): wildpath = arg
+    if opt in ("-f", "--file"): sqlfile = arg
     elif opt in ("-v", "--verbose"): verbose = True
-  if not wildpath:
+  if not sqlfile:
     usage()
     sys.exit(2)
 
-  load(wildpath,verbose)
+  load(sqlfile,verbose)
     
 if __name__ == "__main__":
   main(sys.argv[1:])
