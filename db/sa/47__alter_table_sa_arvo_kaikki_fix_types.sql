@@ -1,4 +1,4 @@
-IF NOT EXISTS (
+IF EXISTS (
   select * from INFORMATION_SCHEMA.COLUMNS
   where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_arvo_kaikki'
   and COLUMN_NAME='tunnus'
@@ -7,7 +7,7 @@ IF NOT EXISTS (
 ALTER TABLE dbo.sa_arvo_kaikki ALTER COLUMN tunnus varchar(10)
 END
 
-IF NOT EXISTS (
+IF EXISTS (
   select * from INFORMATION_SCHEMA.COLUMNS
   where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_arvo_kaikki'
   and COLUMN_NAME='kunta'
@@ -16,7 +16,7 @@ IF NOT EXISTS (
 ALTER TABLE dbo.sa_arvo_kaikki ALTER COLUMN kunta nvarchar(max)
 END
 
-IF NOT EXISTS (
+IF EXISTS (
   select * from INFORMATION_SCHEMA.COLUMNS
   where TABLE_SCHEMA='dbo' and TABLE_NAME='sa_arvo_kaikki'
   and COLUMN_NAME='koulutusmuoto'
