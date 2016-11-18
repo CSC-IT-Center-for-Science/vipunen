@@ -20,7 +20,10 @@ password = os.getenv("DATABASE_PASS")
 # hae avaimen arvo json:sta
 def jv(jsondata, key):
   if key in jsondata:
-    return jsondata[key]
+    if type(jsondata[key]) is list:
+      return ','.join(jsondata[key])
+    else:
+      return jsondata[key]
   return None
 
 def main():
