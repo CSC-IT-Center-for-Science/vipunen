@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# vim: set fileencoding=UTF-8 :
 
 from time import localtime, strftime
 import sys, os
@@ -19,32 +20,41 @@ password = os.getenv("DATABASE_PASS")
 
 # hae avaimen arvo json:sta
 def jv(jsondata, key):
+  #print key
   if key in jsondata:
     if type(jsondata[key]) is list:
-      return ','.join(jsondata[key])
+      return ','.join(str(d) for d in jsondata[key])
     else:
       return jsondata[key]
   return None
 
 def main():
-  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" alkaa").encode('utf-8')
+  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" begin").encode('utf-8')
 
   #print ("Connecting to database %s" % (database)).encode('utf-8')
   conn = pymssql.connect(server, user, password, database)
   cur = conn.cursor()
 
-  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" tyhjennetaan sa_virta_jtp_tkjulkaisut").encode('utf-8')
+  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" empty sa_virta_jtp_tkjulkaisut").encode('utf-8')
   cur.execute("DELETE FROM sa_virta_jtp_tkjulkaisut")
   conn.commit()
 
-  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" haetaan %s" % (sourcehostname)).encode('utf-8')
+  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" load from %s" % (sourcehostname)).encode('utf-8')
   apiuri = "/api/TKjulkaisut"
   httpconn.request('GET', apiuri)
   r = httpconn.getresponse()
   j = json.loads(r.read())
-  lkm = 0
+
+  cnt = 0
   for i in j:
-    lkm += 1
+    cnt += 1
+    if cnt%10 == 0:
+      sys.stdout.write('.')
+      sys.stdout.flush()
+    if cnt%1000 == 0:
+      print ""
+      print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d" % (cnt)).encode('utf-8')
+
     # sarakkeet
     organisaatioTunnus = jv(i, "organisaatioTunnus")
     ilmoitusVuosi = jv(i, "ilmoitusVuosi")
@@ -89,6 +99,7 @@ def main():
     juuliOsoiteTeksti = jv(i, "juuliOsoiteTeksti")
     yhteisjulkaisuYritysKytkin = jv(i, "yhteisjulkaisuYritysKytkin")
     jufoId = jv(i, "jufoId")
+
     hankeTKs = jv(i, "hankeTKs")
     avainsanaTKs = jv(i, "avainsanaTKs")
     isbnTKs = jv(i, "isbnTKs")
@@ -98,11 +109,10 @@ def main():
     tekijaTKs = jv(i, "tekijaTKs")
     tieteenalaTKs = jv(i, "tieteenalaTKs")
 
-    #if lkm%1000 == 0:
-    #  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" -- %d" % (lkm)).encode('utf-8')
     cur.execute("""
-    INSERT INTO sa_virta_jtp_julkaisut
-    (organisaatioTunnus, ilmoitusVuosi, julkaisunTunnus, julkaisunTilakoodi, julkaisunOrgTunnus, julkaisuVuosi,
+    INSERT INTO sa_virta_jtp_tkjulkaisut
+    (
+     organisaatioTunnus, ilmoitusVuosi, julkaisunTunnus, julkaisunTilakoodi, julkaisunOrgTunnus, julkaisuVuosi,
      julkaisunNimi, tekijatiedotTeksti, tekijoidenLkm, sivunumeroTeksti, artikkelinumero, isbn, jufoTunnus,
      jufoLuokkaKoodi, julkaisumaaKoodi, lehdenNimi, issn, volyymiTeksti, lehdenNumeroTeksti, konferenssinNimi,
      kustantajanNimi, kustannuspaikkaTeksti, emojulkaisunNimi, emojulkaisunToimittajatTeksti, julkaisuntyyppiKoodi,
@@ -110,14 +120,23 @@ def main():
      julkaisunKansainvalisyysKytkin, julkaisunKieliKoodi, avoinSaatavuusKoodi, evoJulkaisunKytkin, doi,
      pysyvaOsoiteTeksti, lahdetietokannanTunnus, latausId, yhteisjulkaisuId, rinnakkaistallennusKytkin,
      yhteisjulkaisunTunnus, juuliOsoiteTeksti, yhteisjulkaisuYritysKytkin, jufoId,
-     hankeTKs, avainsanaTKs, isbnTKs, issnTKs, koulutusalaTKs, orgYksikkoTKs, tekijaTKs, tieteenalaTKs)
-    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-    %s)
-    """, (organisaatioTunnus, ilmoitusVuosi, julkaisunTunnus, julkaisunTilakoodi, julkaisunOrgTunnus, julkaisuVuosi,
+     hankeTKs, avainsanaTKs, isbnTKs, issnTKs, koulutusalaTKs, orgYksikkoTKs, tekijaTKs, tieteenalaTKs
+     ,source
+    )
+    VALUES (
+     %s,%s,%s,%s,%s,%s,
+     %s,%s,%s,%s,%s,%s,%s,
+     %s,%s,%s,%s,%s,%s,%s,
+     %s,%s,%s,%s,%s,
+     %s,%s,%s,%s,
+     %s,%s,%s,%s,%s,
+     %s,%s,%s,%s,%s,
+     %s,%s,%s,%s,
+     %s,%s,%s,%s,%s,%s,%s,%s
+     ,%s
+    )
+    """, (
+     organisaatioTunnus, ilmoitusVuosi, julkaisunTunnus, julkaisunTilakoodi, julkaisunOrgTunnus, julkaisuVuosi,
      julkaisunNimi, tekijatiedotTeksti, tekijoidenLkm, sivunumeroTeksti, artikkelinumero, isbn, jufoTunnus,
      jufoLuokkaKoodi, julkaisumaaKoodi, lehdenNimi, issn, volyymiTeksti, lehdenNumeroTeksti, konferenssinNimi,
      kustantajanNimi, kustannuspaikkaTeksti, emojulkaisunNimi, emojulkaisunToimittajatTeksti, julkaisuntyyppiKoodi,
@@ -125,13 +144,15 @@ def main():
      julkaisunKansainvalisyysKytkin, julkaisunKieliKoodi, avoinSaatavuusKoodi, evoJulkaisunKytkin, doi,
      pysyvaOsoiteTeksti, lahdetietokannanTunnus, latausId, yhteisjulkaisuId, rinnakkaistallennusKytkin,
      yhteisjulkaisunTunnus, juuliOsoiteTeksti, yhteisjulkaisuYritysKytkin, jufoId,
-     hankeTKs, avainsanaTKs, isbnTKs, issnTKs, koulutusalaTKs, orgYksikkoTKs, tekijaTKs, tieteenalaTKs))
+     hankeTKs, avainsanaTKs, isbnTKs, issnTKs, koulutusalaTKs, orgYksikkoTKs, tekijaTKs, tieteenalaTKs
+     ,sourcehostname+apiuri
+    ))
     conn.commit()
 
   cur.close()
   conn.close()
 
-  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" valmis").encode('utf-8')
+  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" ready").encode('utf-8')
 
 if __name__ == "__main__":
   main()
