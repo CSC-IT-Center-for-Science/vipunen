@@ -39,7 +39,7 @@ procedure is mandatory argument. Name of the procedure to execute.
 """
 
 def main(argv):
-  # muuttujat jotka kerrotaan argumentein
+  # variables that are given as arguments with possible default values
   schema = "dbo"
   procedure = ""
   verbose = False
