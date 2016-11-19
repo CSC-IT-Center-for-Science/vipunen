@@ -55,11 +55,10 @@ def load(secure,hostname,url,table,postdata,condition,verbose):
   for row in j:
     cnt+=1
     # show some sign of being alive
-    if cnt%10 == 0:
+    if cnt%100 == 0:
       sys.stdout.write('.')
       sys.stdout.flush()
     if cnt%1000 == 0:
-      show("")
       show("-- %d" % (cnt))
     if verbose: show("%d -- %s"%(cnt,row))
 
