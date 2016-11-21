@@ -6,7 +6,7 @@ INSERT INTO dbo.f_amk_talous_3_kulut_ja_tuotot
            (d_amk_id
            ,d_toiminto_id
            ,tilikausi
-           ,tuotot yhteensa
+           ,tuotot_yhteensa
            ,perusrahoitus_yhteensa
            ,tuet_ja_avustukset_yhteensa
            ,maksut_ja_korvaukset_yhteensa
