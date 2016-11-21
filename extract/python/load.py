@@ -25,11 +25,10 @@ def load(secure,hostname,url,table,postdata,condition,verbose):
     show("load from "+address)
     httpconn=httplib.HTTPConnection(hostname)
 
-  # api-yhteysmuuttujat ympäristöasetuksista! (onhan asetettu?)
-  # nb! post-operaatioon data saadaan python-placeholder-merkkijono.
-  # tämä on sarakkeita/tietokenttiä nimetty. Voisiko post-parametriä käyttää?
+  # data for post operation determines to use post, otherwise get
   if postdata:
     headers=""
+    # api credentials from env vars
     if os.getenv("API_USERNAME"):
       apiuser = os.getenv("API_USERNAME")
       apipass = os.getenv("API_PASSWORD")
@@ -41,25 +40,34 @@ def load(secure,hostname,url,table,postdata,condition,verbose):
   r=httpconn.getresponse()
   j=json.loads(r.read())
   show("api returned %d objects"%(len(j)))
-  # selvitä sarakkeet; luupataan kaikki!
-  # (voisi parametroida tai rajoittaa jotenkin...)
-  for row in j:
-    dboperator.columns(row)
 
-  # tietojen poistaminen ehdolla
-  # merge-operaatio voisi tulla kyseeseen, eli katso mitä ei vielä ole kannassa...
+  # remove data conditionally, otherwise empty
+  # merge operation could be considered here...
   if condition:
     show("remove from %s with condition '%s'"%(table,condition))
     dboperator.execute("DELETE FROM %s WHERE %s"%(table,condition))
   else:
-    show("create and/or empty %s"%(table))
-    dboperator.create(table)
+    show("empty %s"%(table))
+    dboperator.empty(table)
 
   show("insert data")
   cnt=0
   for row in j:
     cnt+=1
+    # show some sign of being alive
+    if cnt%100 == 0:
+      sys.stdout.write('.')
+      sys.stdout.flush()
+    if cnt%1000 == 0:
+      show("-- %d" % (cnt))
     if verbose: show("%d -- %s"%(cnt,row))
+
+    # find out which columns to use on insert
+    dboperator.resetcolumns(row)
+
+    for col in row:
+      if type(row[col]) is list:
+        row[col] = ','.join(str(d) for d in row[col])
     dboperator.insert(address,table,row)
 
   show("wrote %d"%(cnt))
