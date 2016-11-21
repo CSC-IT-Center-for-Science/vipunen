@@ -6,7 +6,7 @@ CREATE TABLE dbo.d_organisaatio(
   username nvarchar(128) NOT NULL,
   source nvarchar(255) NULL,
 
-  organisaatio_avain varchar(50) NOT NULL
+  organisaatio_avain varchar(50) NOT NULL,
   organisaatio_koodi varchar(20) NULL,
   organisaatio nvarchar(255) NULL,
   organisaatio_sv nvarchar(255) NULL,
