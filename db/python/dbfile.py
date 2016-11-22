@@ -41,7 +41,9 @@ def load(sqlfile,migrate,verbose=False):
 
     if verbose: show("migrating %s which is going on %s and now trying %s"%(migrate,number_last,number_togo))
 
-    if number_togo>0:
+    if number_togo==0:
+      loadsql(sqlfile,verbose)
+    else:
       if number_last is None or number_togo > number_last:
         show("Migrating")
         loadsql(sqlfile,verbose)
