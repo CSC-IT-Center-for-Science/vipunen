@@ -18,6 +18,13 @@ import dboperator
 def show(message):
   print strftime("%Y-%m-%d %H:%M:%S", localtime())+" "+message
 
+def loadsql(sqlfile,verbose=False):
+  fd = open(sqlfile, 'r')
+  sql = fd.read()
+  fd.close()
+  if verbose: show(sql)
+  dboperator.execute(sql)
+
 def load(sqlfile,migrate,verbose=False):
   show("begin "+sqlfile)
 
@@ -25,25 +32,23 @@ def load(sqlfile,migrate,verbose=False):
   if "__" in sqlfile:
     number_togo = int(sqlfile[sqlfile.rfind("/")+1:sqlfile.index("__",sqlfile.rfind("/")+1)])
 
-  number_last = None
-  if number_togo is not None and migrate:
-    result = dboperator.get("select max(number) as number from migration where phase='%s'"%(migrate))
-    if result[0]["number"] is not None:
-      number_last = int(result[0]["number"])
+  if migrate and number_togo is not None:
+    number_last = None
+    if number_togo>0:
+      result = dboperator.get("select max(number) as number from dbo.migration where phase='%s'"%(migrate))
+      if result[0]["number"] is not None:
+        number_last = int(result[0]["number"])
+
     if verbose: show("migrating %s which is going on %s and now trying %s"%(migrate,number_last,number_togo))
 
     if number_last is None or number_togo > number_last:
       show("migrating")
-
-      fd = open(sqlfile, 'r')
-      sql = fd.read()
-      fd.close()
-      if verbose: show(sql)
-      dboperator.execute(sql)
-
+      loadsql(sqlfile,verbose)
       result = dboperator.execute("insert into migration (phase,number) values ('%s',%s)"%(migrate,number_togo))
     else:
       if verbose: show("skipping migration %s < %s"%(number_togo,number_last))
+  else:
+    loadsql(sqlfile,verbose)
 
   dboperator.close()
   show("ready")
