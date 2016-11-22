@@ -41,12 +41,13 @@ def load(sqlfile,migrate,verbose=False):
 
     if verbose: show("migrating %s which is going on %s and now trying %s"%(migrate,number_last,number_togo))
 
-    if number_last is None or number_togo > number_last:
-      show("migrating")
-      loadsql(sqlfile,verbose)
-      result = dboperator.execute("insert into migration (phase,number) values ('%s',%s)"%(migrate,number_togo))
-    else:
-      if verbose: show("skipping migration %s < %s"%(number_togo,number_last))
+    if number_togo>0:
+      if number_last is None or number_togo > number_last:
+        show("Migrating")
+        loadsql(sqlfile,verbose)
+        result = dboperator.execute("insert into migration (phase,number) values ('%s',%s)"%(migrate,number_togo))
+      else:
+        if verbose: show("skipping migration %s < %s"%(number_togo,number_last))
   else:
     loadsql(sqlfile,verbose)
 
