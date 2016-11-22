@@ -11,7 +11,20 @@ CREATE PROCEDURE dbo.p_lataa_f_kotimaiset_julkaisut_tilasto AS
 
 TRUNCATE TABLE dbo.f_kotimaiset_julkaisut_tilasto
 
-INSERT INTO dbo.f_kotimaiset_julkaisut_tilasto
+INSERT INTO dbo.f_kotimaiset_julkaisut_tilasto (
+	d_sektori_id,
+	d_organisaatio_id,
+	d_julkaisufoorumitaso_id,
+	d_julkaisutyyppi_id,
+	d_julkaisun_kansainvalisyys_id,
+	d_kansainvalinen_yhteisjulkaisu_id,
+	d_tieteenala_id,
+	tilastovuosi,
+
+	lukumaara,
+
+	source
+)
 
 SELECT
   -1 AS d_sektori_id,
