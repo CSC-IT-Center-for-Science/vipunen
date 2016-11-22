@@ -26,7 +26,7 @@ def load(sqlfile,migrate,verbose=False):
     number_togo = int(sqlfile[sqlfile.rfind("/")+1:sqlfile.index("__",sqlfile.rfind("/")+1)])
 
   number_last = None
-  if number_togo and migrate:
+  if number_togo is not None and migrate:
     result = dboperator.get("select max(number) as number from migration where phase='%s'"%(migrate))
     if result[0]["number"] is not None:
       number_last = int(result[0]["number"])
@@ -41,7 +41,6 @@ def load(sqlfile,migrate,verbose=False):
       if verbose: show(sql)
       dboperator.execute(sql)
 
-      # todo insert migrate..
       result = dboperator.execute("insert into migration (phase,number) values ('%s',%s)"%(migrate,number_togo))
     else:
       if verbose: show("skipping migration %s < %s"%(number_togo,number_last))
