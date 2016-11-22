@@ -89,6 +89,14 @@ def execute(sql,debug=False):
   count = cur.rowcount
   conn.commit()
 
+def get(sql,debug=False):
+  global conn, cur, count, columnlist
+  if debug: print "dboperator.get: sql="+sql
+  cur.execute(sql)
+  count = cur.rowcount
+  result = cur.fetchall()
+  return result
+
 def close(debug=False):
   global conn, cur
   if debug: print "dboperator.close: closing"
