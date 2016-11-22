@@ -33,23 +33,24 @@ def load(sqlfile,migrate,verbose=False):
     number_togo = int(sqlfile[sqlfile.rfind("/")+1:sqlfile.index("__",sqlfile.rfind("/")+1)])
 
   if migrate and number_togo is not None:
-    number_last = None
-    if number_togo>0:
+    # migration install step 0 is special, just add the table for others
+    if number_togo==0:
+      loadsql(sqlfile,verbose)
+    else:
+      number_last = None
       result = dboperator.get("select max(number) as number from dbo.migration where phase='%s'"%(migrate))
       if result[0]["number"] is not None:
         number_last = int(result[0]["number"])
 
-    if verbose: show("migrating %s which is going on %s and now trying %s"%(migrate,number_last,number_togo))
+      if verbose: show("migrating %s which is going on at %s and now trying %s"%(migrate,number_last,number_togo))
 
-    if number_togo==0:
-      loadsql(sqlfile,verbose)
-    else:
       if number_last is None or number_togo > number_last:
-        show("Migrating")
+        show("Migrating from %s to %s"%(number_last,number_togo))
         loadsql(sqlfile,verbose)
         result = dboperator.execute("insert into migration (phase,number) values ('%s',%s)"%(migrate,number_togo))
       else:
         if verbose: show("skipping migration %s < %s"%(number_togo,number_last))
+
   else:
     loadsql(sqlfile,verbose)
 
