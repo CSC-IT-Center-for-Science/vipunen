@@ -6,12 +6,14 @@ CREATE TABLE dbo.migration(
 	phase varchar(20) NOT NULL,
 	number int NOT NULL,
 	loadtime datetime NOT NULL,
-	username varchar(30) NOT NULL,
-
+	username varchar(30) NOT NULL
 )
 ;
-ALTER TABLE dbo.migration ADD  CONSTRAINT DF_migration_loadtime  DEFAULT (getdate()) FOR loadtime
+ALTER TABLE dbo.migration ADD  CONSTRAINT PK__migration PRIMARY KEY (id ASC)
 ;
-ALTER TABLE dbo.migration ADD  CONSTRAINT DF_migration_username  DEFAULT (suser_name()) FOR username
+
+ALTER TABLE dbo.migration ADD  CONSTRAINT DF__migration__loadtime  DEFAULT (getdate()) FOR loadtime
+;
+ALTER TABLE dbo.migration ADD  CONSTRAINT DF__migration__username  DEFAULT (suser_name()) FOR username
 ;
 END
