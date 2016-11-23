@@ -10,14 +10,28 @@ import httplib,ssl,base64
 import json
 from time import localtime, strftime
 
-import dboperator
+#import dboperator
+import pymssql
+
+# Uses env vars for the connection.
+# If not set, kill the process!
+dbhost = os.getenv("DATABASE_HOST")
+dbname = os.getenv("DATABASE_NAME")
+dbuser = os.getenv("DATABASE_USER")
+dbpass = os.getenv("DATABASE_PASS")
+if not dbhost or not dbname or not dbuser or not dbpass:
+  print "Missing database settings. Exiting."
+  sys.exit(2)
+
+# global vars; information maintains between calls
+conn = pymssql.connect(dbhost, dbuser, dbpass, dbname)
+cur = conn.cursor(as_dict=True)
 
 def show(message):
-  print strftime("%Y-%m-%d %H:%M:%S", localtime())+" "+message
+  print (strftime("%Y-%m-%d %H:%M:%S", localtime())+" "+message).encode('utf-8')
 
 # hae avaimen arvo json:sta
 def jv(jsondata, key):
-  #print key
   if key in jsondata:
     return jsondata[key]
   return None
@@ -37,7 +51,9 @@ def load(hostname,url,table,verbose):
   show("api returned %d objects"%(len(j)))
 
   show("empty %s"%(table))
-  dboperator.empty(table)
+  #dboperator.empty(table)
+  cur.execute("TRUNCATE TABLE [%s]"%(table))
+  conn.commit()
 
   show("insert data")
   cnt=0
@@ -110,24 +126,27 @@ def load(hostname,url,table,verbose):
     isbnTKs = jv(row, "isbnTKs")
     isbnTKstr = None
     if type(isbnTKs) is list and len(isbnTKs)>0:
-      isbnTKstr = isbnTKs[0]["isbn"]
+      if "isbn" in isbnTKs[0]:
+        isbnTKstr = isbnTKs[0]["isbn"]
 
     issnTKs = jv(row, "issnTKs")
     issnTKstr = None
     if type(issnTKs) is list and len(issnTKs)>0:
-      issnTKstr = issnTKs[0]["issn"]
+      if "issn" in issnTKs[0]:
+        issnTKstr = issnTKs[0]["issn"]
 
     koulutusalaTKs = jv(row, "koulutusalaTKs")
     koulutusalaTKstr = None
     if type(koulutusalaTKs) is list and len(koulutusalaTKs)>0:
       for d in koulutusalaTKs:
-        if d["jNro"] and d["jNro"]==1:
+        if "jNro" in d and d["jNro"]==1 and "koulutusala" in d:
           koulutusalaTKstr = d["koulutusala"]
 
     orgYksikkoTKs = jv(row, "orgYksikkoTKs")
     orgYksikkoTKstr = None
     if type(orgYksikkoTKs) is list and len(orgYksikkoTKs)>0:
-      orgYksikkoTKstr = orgYksikkoTKs[0]["julkaisuYksikko"]
+      if "julkaisuYksikko" in orgYksikkoTKs[0]:
+        orgYksikkoTKstr = orgYksikkoTKs[0]["julkaisuYksikko"]
 
     tekijaTKs = jv(row, "tekijaTKs")
     tekijaTKstr = ""
@@ -137,16 +156,16 @@ def load(hostname,url,table,verbose):
         di=di+1
         if di>1:
           tekijaTKstr = tekijaTKstr+"; "
-        if d["sukunimi"]:
-          tekijaTKstr = tekijaTKstr+d["sukunimi"]
-        if d["etunimet"]:
+        if "sukunimi" in d:
+          tekijaTKstr = tekijaTKstr+d["sukunimi"].strip()
+        if "etunimet" in d:
           tekijaTKstr = tekijaTKstr+", "+d["etunimet"].strip()
 
     tieteenalaTKs = jv(row, "tieteenalaTKs")
     tieteenalaTKstr = None
     if type(tieteenalaTKs) is list and len(tieteenalaTKs)>0:
       for d in tieteenalaTKs:
-        if d["jNro"] and d["jNro"]==1:
+        if "jNro" in d and d["jNro"]==1 and "tieteenala" in d:
           tieteenalaTKstr = d["tieteenala"]
 
     # find out which columns to use on insert
@@ -156,8 +175,9 @@ def load(hostname,url,table,verbose):
     ##  if type(row[col]) is list:
     ##    row[col] = ','.join(str(d) for d in row[col])
     ##dboperator.insert(address,table,row)
-    dboperator.execute("""
-    INSERT INTO sa_virta_jtp_tkjulkaisut
+    #dboperator.execute("""
+    cur.execute("""
+    INSERT INTO %s
     (
      organisaatioTunnus, ilmoitusVuosi, julkaisunTunnus, julkaisunTilakoodi, julkaisunOrgTunnus, julkaisuVuosi,
      julkaisunNimi, tekijatiedotTeksti, tekijoidenLkm, sivunumeroTeksti, artikkelinumero, isbn, jufoTunnus,
@@ -170,6 +190,7 @@ def load(hostname,url,table,verbose):
      hankeTKs, avainsanaTKs, isbnTKs, issnTKs, koulutusalaTKs, orgYksikkoTKs, tekijaTKs, tieteenalaTKs
      ,source
     )
+    """%(table)+"""
     VALUES (
      %s,%s,%s,%s,%s,%s,
      %s,%s,%s,%s,%s,%s,%s,
@@ -194,9 +215,12 @@ def load(hostname,url,table,verbose):
      hankeTKstr, avainsanaTKstr, isbnTKstr, issnTKstr, koulutusalaTKstr, orgYksikkoTKstr, tekijaTKstr, tieteenalaTKstr
      ,address
     ))
+    conn.commit()
 
   show("wrote %d"%(cnt))
-  dboperator.close()
+  #dboperator.close()
+  cur.close()
+  conn.close()
 
   show("ready")
 
