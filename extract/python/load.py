@@ -67,7 +67,7 @@ def load(secure,hostname,url,table,postdata,condition,verbose):
 
     for col in row:
       if type(row[col]) is list:
-        row[col] = ','.join(str(d) for d in row[col])
+        row[col] = str(row[col])
     dboperator.insert(address,table,row)
 
   show("wrote %d"%(cnt))
