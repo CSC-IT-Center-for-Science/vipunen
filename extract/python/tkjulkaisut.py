@@ -25,17 +25,15 @@ def jv(jsondata, key):
 def load(hostname,url,table,verbose):
   show("begin "+hostname+" "+url+" "+table)
   address=hostname+url
-  
+
   show("load securely from "+address)
-  #httpconn=httplib.HTTPSConnection(hostname, context=ssl._create_unverified_context())
-  
-  #httpconn.request('GET', url)
-  
-  #r = httpconn.getresponse()
-  #j = json.loads(r.read())
-  f = open("/home/ljokipii/test-TKjulkaisut-cut", 'r')
-  r = f.read()
-  j = json.loads(r)
+  httpconn=httplib.HTTPSConnection(hostname, context=ssl._create_unverified_context())
+
+  httpconn.request('GET', url)
+
+  r = httpconn.getresponse()
+  j = json.loads(r.read())
+
   show("api returned %d objects"%(len(j)))
 
   show("empty %s"%(table))
@@ -103,34 +101,34 @@ def load(hostname,url,table,verbose):
     hankeTKstr = None
     if type(hankeTKs) is list and len(hankeTKs)>0:
       hankeTKstr = ','.join(str(d) for d in hankeTKs)
-    
+
     avainsanaTKs = jv(row, "avainsanaTKs")
     avainsanaTKstr = None
     if type(avainsanaTKs) is list and len(avainsanaTKs)>0:
       avainsanaTKstr = ','.join(str(d) for d in avainsanaTKs)
-    
+
     isbnTKs = jv(row, "isbnTKs")
     isbnTKstr = None
     if type(isbnTKs) is list and len(isbnTKs)>0:
       isbnTKstr = isbnTKs[0]["isbn"]
-    
+
     issnTKs = jv(row, "issnTKs")
     issnTKstr = None
     if type(issnTKs) is list and len(issnTKs)>0:
       issnTKstr = issnTKs[0]["issn"]
-    
+
     koulutusalaTKs = jv(row, "koulutusalaTKs")
     koulutusalaTKstr = None
     if type(koulutusalaTKs) is list and len(koulutusalaTKs)>0:
       for d in koulutusalaTKs:
         if d["jNro"] and d["jNro"]==1:
           koulutusalaTKstr = d["koulutusala"]
-    
+
     orgYksikkoTKs = jv(row, "orgYksikkoTKs")
     orgYksikkoTKstr = None
     if type(orgYksikkoTKs) is list and len(orgYksikkoTKs)>0:
       orgYksikkoTKstr = orgYksikkoTKs[0]["julkaisuYksikko"]
-    
+
     tekijaTKs = jv(row, "tekijaTKs")
     tekijaTKstr = ""
     if type(tekijaTKs) is list and len(tekijaTKs)>0:
@@ -143,7 +141,7 @@ def load(hostname,url,table,verbose):
           tekijaTKstr = tekijaTKstr+d["sukunimi"]
         if d["etunimet"]:
           tekijaTKstr = tekijaTKstr+", "+d["etunimet"].strip()
-    
+
     tieteenalaTKs = jv(row, "tieteenalaTKs")
     tieteenalaTKstr = None
     if type(tieteenalaTKs) is list and len(tieteenalaTKs)>0:
@@ -196,10 +194,10 @@ def load(hostname,url,table,verbose):
      hankeTKstr, avainsanaTKstr, isbnTKstr, issnTKstr, koulutusalaTKstr, orgYksikkoTKstr, tekijaTKstr, tieteenalaTKstr
      ,address
     ))
-  
+
   show("wrote %d"%(cnt))
   dboperator.close()
-    
+
   show("ready")
 
 def usage():
