@@ -1,0 +1,298 @@
+{
+  "name": "SemanticModel",
+  "compatibilityLevel": 1200,
+  "model": {
+    "culture": "fi-FI",
+    "dataSources": [
+      {
+        "name": "SqlServer dwitvipusql16 VIPUNEN_DW",
+        "connectionString": "Provider=SQLNCLI11;Data Source=dwitvipusql16;Initial Catalog=VIPUNEN_DW;Integrated Security=SSPI;Persist Security Info=false",
+        "impersonationMode": "impersonateServiceAccount",
+        "annotations": [
+          {
+            "name": "ConnectionEditUISource",
+            "value": "SqlServer"
+          }
+        ]
+      },
+      {
+        "name": "SqlServer dwitvipusql16 VIPUNEN_DW 2",
+        "connectionString": "Provider=SQLNCLI11;Data Source=dwitvipusql16;Initial Catalog=VIPUNEN_DW;Integrated Security=SSPI;Persist Security Info=false",
+        "impersonationMode": "impersonateAccount",
+        "account": "dwi\\jpesonen",
+        "annotations": [
+          {
+            "name": "ConnectionEditUISource",
+            "value": "SqlServer"
+          }
+        ]
+      }
+    ],
+    "tables": [
+      {
+        "name": "v_virta_jtp_tilasto",
+        "columns": [
+          {
+            "name": "Tilastovuosi",
+            "dataType": "int64",
+            "sourceColumn": "Tilastovuosi",
+            "sourceProviderType": "Integer"
+          },
+          {
+            "name": "virtajtpsektori_koodi",
+            "dataType": "string",
+            "sourceColumn": "virtajtpsektori_koodi",
+            "sourceProviderType": "Char"
+          },
+          {
+            "name": "virtajtpsektori_fi",
+            "dataType": "string",
+            "sourceColumn": "virtajtpsektori_fi",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "virtajtpsektori_sv",
+            "dataType": "string",
+            "sourceColumn": "virtajtpsektori_sv",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "virtajtpsektori_en",
+            "dataType": "string",
+            "sourceColumn": "virtajtpsektori_en",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "organisaatio_koodi",
+            "dataType": "string",
+            "sourceColumn": "organisaatio_koodi",
+            "sourceProviderType": "Char"
+          },
+          {
+            "name": "organisaatio_fi",
+            "dataType": "string",
+            "sourceColumn": "organisaatio_fi",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "organisaatio_sv",
+            "dataType": "string",
+            "sourceColumn": "organisaatio_sv",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "organisaatio_en",
+            "dataType": "string",
+            "sourceColumn": "organisaatio_en",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisufoorumitaso_koodi",
+            "dataType": "string",
+            "sourceColumn": "julkaisufoorumitaso_koodi",
+            "sourceProviderType": "Char"
+          },
+          {
+            "name": "julkaisufoorumitaso_fi",
+            "dataType": "string",
+            "sourceColumn": "julkaisufoorumitaso_fi",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisufoorumitaso_sv",
+            "dataType": "string",
+            "sourceColumn": "julkaisufoorumitaso_sv",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisufoorumitaso_en",
+            "dataType": "string",
+            "sourceColumn": "julkaisufoorumitaso_en",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisunpaaluokka_koodi",
+            "dataType": "string",
+            "sourceColumn": "julkaisunpaaluokka_koodi",
+            "sourceProviderType": "Char"
+          },
+          {
+            "name": "julkaisunpaaluokka_nimi_fi",
+            "dataType": "string",
+            "sourceColumn": "julkaisunpaaluokka_nimi_fi",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisunpaaluokka_nimi_sv",
+            "dataType": "string",
+            "sourceColumn": "julkaisunpaaluokka_nimi_sv",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisunpaaluokka_nimi_en",
+            "dataType": "string",
+            "sourceColumn": "julkaisunpaaluokka_nimi_en",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisutyyppi_koodi",
+            "dataType": "string",
+            "sourceColumn": "julkaisutyyppi_koodi",
+            "sourceProviderType": "Char"
+          },
+          {
+            "name": "julkaisutyyppi_nimi_fi",
+            "dataType": "string",
+            "sourceColumn": "julkaisutyyppi_nimi_fi",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisutyyppi_nimi_sv",
+            "dataType": "string",
+            "sourceColumn": "julkaisutyyppi_nimi_sv",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisutyyppi_nimi_en",
+            "dataType": "string",
+            "sourceColumn": "julkaisutyyppi_nimi_en",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisun_kansainvalisyys_koodi",
+            "dataType": "string",
+            "sourceColumn": "julkaisun_kansainvalisyys_koodi",
+            "sourceProviderType": "Char"
+          },
+          {
+            "name": "julkaisun_kansainvalisyys_fi",
+            "dataType": "string",
+            "sourceColumn": "julkaisun_kansainvalisyys_fi",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisun_kansainvalisyys_sv",
+            "dataType": "string",
+            "sourceColumn": "julkaisun_kansainvalisyys_sv",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "julkaisun_kansainvalisyys_en",
+            "dataType": "string",
+            "sourceColumn": "julkaisun_kansainvalisyys_en",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "kansainvalinen_yhteisjulkaisu_koodi",
+            "dataType": "string",
+            "sourceColumn": "kansainvalinen_yhteisjulkaisu_koodi",
+            "sourceProviderType": "Char"
+          },
+          {
+            "name": "kansainvalinen_yhteisjulkaisu_fi",
+            "dataType": "string",
+            "sourceColumn": "kansainvalinen_yhteisjulkaisu_fi",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "kansainvalinen_yhteisjulkaisu_sv",
+            "dataType": "string",
+            "sourceColumn": "kansainvalinen_yhteisjulkaisu_sv",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "kansainvalinen_yhteisjulkaisu_en",
+            "dataType": "string",
+            "sourceColumn": "kansainvalinen_yhteisjulkaisu_en",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "paatieteenala_koodi",
+            "dataType": "string",
+            "sourceColumn": "paatieteenala_koodi",
+            "sourceProviderType": "Char"
+          },
+          {
+            "name": "paatieteenala_nimi_fi",
+            "dataType": "string",
+            "sourceColumn": "paatieteenala_nimi_fi",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "paatieteenala_nimi_sv",
+            "dataType": "string",
+            "sourceColumn": "paatieteenala_nimi_sv",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "paatieteenala_nimi_en",
+            "dataType": "string",
+            "sourceColumn": "paatieteenala_nimi_en",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "tieteenala_koodi",
+            "dataType": "string",
+            "sourceColumn": "tieteenala_koodi",
+            "sourceProviderType": "Char"
+          },
+          {
+            "name": "tieteenala_nimi_fi",
+            "dataType": "string",
+            "sourceColumn": "tieteenala_nimi_fi",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "tieteenala_nimi_sv",
+            "dataType": "string",
+            "sourceColumn": "tieteenala_nimi_sv",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "tieteenala_nimi_en",
+            "dataType": "string",
+            "sourceColumn": "tieteenala_nimi_en",
+            "sourceProviderType": "WChar"
+          },
+          {
+            "name": "lukumaara",
+            "dataType": "int64",
+            "sourceColumn": "lukumaara",
+            "sourceProviderType": "Integer"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "v_virta_jtp_tilasto",
+            "dataView": "full",
+            "source": {
+              "query": " SELECT [dbo].[v_virta_jtp_tilasto].* FROM [dbo].[v_virta_jtp_tilasto] ",
+              "dataSource": "SqlServer dwitvipusql16 VIPUNEN_DW 2"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": " SELECT [dbo].[v_virta_jtp_tilasto].* FROM [dbo].[v_virta_jtp_tilasto] "
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "v_virta_jtp_tilasto"
+          },
+          {
+            "name": "_TM_ExtProp_DbSchemaName",
+            "value": "dbo"
+          }
+        ]
+      }
+    ],
+    "annotations": [
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "400"
+      }
+    ]
+  },
+  "id": "SemanticModel"
+}
