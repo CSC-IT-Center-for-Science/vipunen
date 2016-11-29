@@ -212,8 +212,7 @@
             "name": "paatieteenala_koodi",
             "dataType": "string",
             "sourceColumn": "paatieteenala_koodi",
-            "sourceProviderType": "Char",
-            "displayFolder": "Koodimuuttujat"
+            "sourceProviderType": "Char"
           },
           {
             "name": "paatieteenala_nimi_fi",
