@@ -1068,7 +1068,7 @@
             "formatString": "#,0"
           },
           {
-            "name": "Julkaisut2",
+            "name": "Julkaisut3",
             "expression": "sum([lukumaara])"
           }
         ],
