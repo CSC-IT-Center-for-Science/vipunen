@@ -1066,6 +1066,10 @@
             "name": "Publications",
             "expression": "sum([lukumaara])",
             "formatString": "#,0"
+          },
+          {
+            "name": "Julkaisut2",
+            "expression": "sum([lukumaara])"
           }
         ],
         "annotations": [
