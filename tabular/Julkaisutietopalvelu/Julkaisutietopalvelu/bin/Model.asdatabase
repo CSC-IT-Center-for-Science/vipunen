@@ -1066,6 +1066,10 @@
             "name": "Publications",
             "expression": "sum([lukumaara])",
             "formatString": "#,0"
+          },
+          {
+            "name": "Julkaisut3",
+            "expression": "sum([lukumaara])"
           }
         ],
         "annotations": [
@@ -1985,6 +1989,18 @@
                 "name": "Sarakeleveys"
               }
             ]
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "Testi",
+        "modelPermission": "read",
+        "members": [
+          {
+            "memberName": "DWI\\T_SP_Excel_S_Read",
+            "memberId": "S-1-5-21-2196741920-3238685902-2581541251-1732"
           }
         ]
       }
