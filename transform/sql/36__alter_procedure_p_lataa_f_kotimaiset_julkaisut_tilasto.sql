@@ -18,7 +18,7 @@ INSERT INTO dbo.f_kotimaiset_julkaisut_tilasto (
 )
 
 SELECT
-  -1 AS d_virtajtpsektori_id,
+  coalesce(d1.id,-1) AS d_virtajtpsektori_id,
   coalesce(d2_1.id,d2_2.id,d2_3.id,-1) AS d_organisaatio_id,
   coalesce(d3.id,-1) AS d_julkaisufoorumitaso_id,
   coalesce(d4.id,-1) AS d_julkaisutyyppi_id,
@@ -31,7 +31,7 @@ SELECT
 
   'ETL: p_lataa_f_kotimaiset_julkaisut_tilasto' AS source
 FROM VIPUNEN_SA.dbo.sa_virta_jtp_tkjulkaisut f
---todo: sektori
+LEFT JOIN dbo.d_virtajtpsektori d1 ON d1.virtajtpsektori_koodi = f.orgSektori
 LEFT JOIN dbo.d_organisaatio d2_1 ON d2_1.organisaatio_avain like 'oppilaitosnumero_%' and d2_1.organisaatio_koodi = f.organisaatioTunnus
 LEFT JOIN dbo.d_organisaatio d2_2 ON d2_2.organisaatio_avain like 'koulutustoimija_%' and d2_2.organisaatio_koodi = f.organisaatioTunnus
 LEFT JOIN dbo.d_organisaatio d2_3 ON d2_3.organisaatio_avain like 'tutkimusorganisaatio_%' and d2_3.organisaatio_koodi = f.organisaatioTunnus
