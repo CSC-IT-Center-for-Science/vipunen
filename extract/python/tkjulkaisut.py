@@ -112,6 +112,7 @@ def load(hostname,url,table,verbose):
     juuliOsoiteTeksti = jv(row, "juuliOsoiteTeksti")
     yhteisjulkaisuYritysKytkin = jv(row, "yhteisjulkaisuYritysKytkin")
     jufoId = jv(row, "jufoId")
+    orgSektori = jv(row, "orgSektori")
 
     hankeTKs = jv(row, "hankeTKs")
     hankeTKstr = None
@@ -186,7 +187,7 @@ def load(hostname,url,table,verbose):
      yhteisjulkaisuKVKytkin, yhteisjulkaisuSHPKytkin, yhteisjulkaisuTutkimuslaitosKytkin, yhteisjulkaisuMuuKytkin,
      julkaisunKansainvalisyysKytkin, julkaisunKieliKoodi, avoinSaatavuusKoodi, evoJulkaisunKytkin, doi,
      pysyvaOsoiteTeksti, lahdetietokannanTunnus, latausId, yhteisjulkaisuId, rinnakkaistallennusKytkin,
-     yhteisjulkaisunTunnus, juuliOsoiteTeksti, yhteisjulkaisuYritysKytkin, jufoId,
+     yhteisjulkaisunTunnus, juuliOsoiteTeksti, yhteisjulkaisuYritysKytkin, jufoId, orgSektori,
      hankeTKs, avainsanaTKs, isbnTKs, issnTKs, koulutusalaTKs, orgYksikkoTKs, tekijaTKs, tieteenalaTKs
      ,source
     )
@@ -199,7 +200,7 @@ def load(hostname,url,table,verbose):
      %s,%s,%s,%s,
      %s,%s,%s,%s,%s,
      %s,%s,%s,%s,%s,
-     %s,%s,%s,%s,
+     %s,%s,%s,%s,%s,
      %s,%s,%s,%s,%s,%s,%s,%s
      ,%s
     )
@@ -211,7 +212,7 @@ def load(hostname,url,table,verbose):
      yhteisjulkaisuKVKytkin, yhteisjulkaisuSHPKytkin, yhteisjulkaisuTutkimuslaitosKytkin, yhteisjulkaisuMuuKytkin,
      julkaisunKansainvalisyysKytkin, julkaisunKieliKoodi, avoinSaatavuusKoodi, evoJulkaisunKytkin, doi,
      pysyvaOsoiteTeksti, lahdetietokannanTunnus, latausId, yhteisjulkaisuId, rinnakkaistallennusKytkin,
-     yhteisjulkaisunTunnus, juuliOsoiteTeksti, yhteisjulkaisuYritysKytkin, jufoId,
+     yhteisjulkaisunTunnus, juuliOsoiteTeksti, yhteisjulkaisuYritysKytkin, jufoId, orgSektori,
      hankeTKstr, avainsanaTKstr, isbnTKstr, issnTKstr, koulutusalaTKstr, orgYksikkoTKstr, tekijaTKstr, tieteenalaTKstr
      ,address
     ))
