@@ -1,0 +1,334 @@
+{
+  "name": "SemanticModel",
+  "compatibilityLevel": 1200,
+  "model": {
+    "culture": "fi-FI",
+    "dataSources": [
+      {
+        "name": "SqlServer dwitvipusql16 VIPUNEN_DW",
+        "connectionString": "Provider=SQLNCLI11;Data Source=dwitvipusql16;Initial Catalog=VIPUNEN_DW;Integrated Security=SSPI;Persist Security Info=false",
+        "impersonationMode": "impersonateServiceAccount",
+        "annotations": [
+          {
+            "name": "ConnectionEditUISource",
+            "value": "SqlServer"
+          }
+        ]
+      }
+    ],
+    "tables": [
+      {
+        "name": "v_avop_live",
+        "columns": [
+          {
+            "name": "tunnus",
+            "dataType": "string",
+            "isHidden": true,
+            "sourceColumn": "tunnus",
+            "sourceProviderType": "Char"
+          },
+          {
+            "name": "Päiväys",
+            "dataType": "dateTime",
+            "sourceColumn": "Päiväys",
+            "formatString": "General Date",
+            "sourceProviderType": "DBDate",
+            "displayFolder": "Aikamuuttujat"
+          },
+          {
+            "name": "Viikko",
+            "dataType": "int64",
+            "sourceColumn": "Viikko",
+            "sourceProviderType": "Integer",
+            "displayFolder": "Aikamuuttujat"
+          },
+          {
+            "name": "Kuukausi",
+            "dataType": "string",
+            "sourceColumn": "Kuukausi",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Aikamuuttujat"
+          },
+          {
+            "name": "Vuosi",
+            "dataType": "int64",
+            "sourceColumn": "Vuosi",
+            "sourceProviderType": "Integer",
+            "displayFolder": "Aikamuuttujat"
+          },
+          {
+            "name": "Ammattikorkeakoulukoodi",
+            "dataType": "string",
+            "sourceColumn": "Ammattikorkeakoulukoodi",
+            "sourceProviderType": "Char",
+            "displayFolder": "Koodimuuttujat"
+          },
+          {
+            "name": "Ammattikorkeakoulu",
+            "dataType": "string",
+            "sourceColumn": "Ammattikorkeakoulu",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Organisaatiomuuttujat"
+          },
+          {
+            "name": "Koulutusala, taso 1 koodi",
+            "dataType": "string",
+            "sourceColumn": "Koulutusala, taso 1 koodi",
+            "sourceProviderType": "Char",
+            "displayFolder": "Koodimuuttujat"
+          },
+          {
+            "name": "Koulutusala, taso 1",
+            "dataType": "string",
+            "sourceColumn": "Koulutusala, taso 1",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Koulutusmuuttujat"
+          },
+          {
+            "name": "Koulutusala, taso 2 koodi",
+            "dataType": "string",
+            "sourceColumn": "Koulutusala, taso 2 koodi",
+            "sourceProviderType": "Char",
+            "displayFolder": "Koodimuuttujat"
+          },
+          {
+            "name": "Koulutusala, taso 2",
+            "dataType": "string",
+            "sourceColumn": "Koulutusala, taso 2",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Koulutusmuuttujat"
+          },
+          {
+            "name": "Koulutusala, taso 3 koodi",
+            "dataType": "string",
+            "sourceColumn": "Koulutusala, taso 3 koodi",
+            "sourceProviderType": "Char",
+            "displayFolder": "Koodimuuttujat"
+          },
+          {
+            "name": "Koulutusala, taso 3",
+            "dataType": "string",
+            "sourceColumn": "Koulutusala, taso 3",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Koulutusmuuttujat"
+          },
+          {
+            "name": "OKM ohjauksen ala koodi",
+            "dataType": "string",
+            "sourceColumn": "OKM ohjauksen ala koodi",
+            "sourceProviderType": "Char",
+            "displayFolder": "Koodimuuttujat"
+          },
+          {
+            "name": "OKM ohjauksen ala",
+            "dataType": "string",
+            "sourceColumn": "OKM ohjauksen ala",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Koulutusmuuttujat"
+          },
+          {
+            "name": "Koulutuskoodi",
+            "dataType": "string",
+            "sourceColumn": "Koulutuskoodi",
+            "sourceProviderType": "Char",
+            "displayFolder": "Koodimuuttujat"
+          },
+          {
+            "name": "Koulutusnimike",
+            "dataType": "string",
+            "sourceColumn": "Koulutusnimike",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Koulutusmuuttujat"
+          },
+          {
+            "name": "Kielikoodi",
+            "dataType": "string",
+            "sourceColumn": "Kielikoodi",
+            "sourceProviderType": "Char",
+            "displayFolder": "Koodimuuttujat"
+          },
+          {
+            "name": "Tutkinnon suorituskieli",
+            "dataType": "string",
+            "sourceColumn": "Tutkinnon suorituskieli",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Koulutusmuuttujat"
+          },
+          {
+            "name": "Kuntakoodi",
+            "dataType": "string",
+            "sourceColumn": "Kuntakoodi",
+            "sourceProviderType": "Char",
+            "displayFolder": "Koodimuuttujat"
+          },
+          {
+            "name": "Kunta",
+            "dataType": "string",
+            "sourceColumn": "Kunta",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Aluemuuttujat"
+          },
+          {
+            "name": "Maakuntakoodi",
+            "dataType": "string",
+            "sourceColumn": "Maakuntakoodi",
+            "sourceProviderType": "Char",
+            "displayFolder": "Koodimuuttujat"
+          },
+          {
+            "name": "Maakunta",
+            "dataType": "string",
+            "sourceColumn": "Maakunta",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Aluemuuttujat"
+          },
+          {
+            "name": "Ikä",
+            "dataType": "string",
+            "sourceColumn": "Ikä",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Henkilömuuttujat"
+          },
+          {
+            "name": "Sukupuoli",
+            "dataType": "string",
+            "sourceColumn": "Sukupuoli",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Henkilömuuttujat"
+          },
+          {
+            "name": "Pohjakoulutus",
+            "dataType": "string",
+            "sourceColumn": "Pohjakoulutus",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Henkilömuuttujat"
+          },
+          {
+            "name": "Koulutusmuoto",
+            "dataType": "string",
+            "sourceColumn": "Koulutusmuoto",
+            "sourceProviderType": "Char",
+            "displayFolder": "Koulutusmuuttujat"
+          },
+          {
+            "name": "Kysymysryhmä",
+            "dataType": "string",
+            "sourceColumn": "Kysymysryhmä",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Kyselymuuttujat"
+          },
+          {
+            "name": "Kysymys",
+            "dataType": "string",
+            "sourceColumn": "Kysymys",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Kyselymuuttujat"
+          },
+          {
+            "name": "Kysely",
+            "dataType": "string",
+            "sourceColumn": "Kysely",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Kyselymuuttujat"
+          },
+          {
+            "name": "Kyselykerta",
+            "dataType": "string",
+            "sourceColumn": "Kyselykerta",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Kyselymuuttujat"
+          },
+          {
+            "name": "Vastaustyyppi",
+            "dataType": "string",
+            "sourceColumn": "Vastaustyyppi",
+            "sourceProviderType": "Char",
+            "displayFolder": "Kyselymuuttujat"
+          },
+          {
+            "name": "Monivalintavaihtoehto",
+            "dataType": "string",
+            "sourceColumn": "Monivalintavaihtoehto",
+            "sourceProviderType": "WChar",
+            "displayFolder": "Kyselymuuttujat"
+          },
+          {
+            "name": "Numerovalinta",
+            "dataType": "int64",
+            "sourceColumn": "Numerovalinta",
+            "sourceProviderType": "Char",
+            "displayFolder": "Kyselymuuttujat"
+          },
+          {
+            "name": "Lukumäärä",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "Lukumäärä",
+            "sourceProviderType": "Integer"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "v_avop_live",
+            "dataView": "full",
+            "source": {
+              "query": " SELECT [dbo].[v_avop_live].* FROM [dbo].[v_avop_live] ",
+              "dataSource": "SqlServer dwitvipusql16 VIPUNEN_DW"
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "VM",
+            "expression": "DISTINCTCOUNT([tunnus])"
+          },
+          {
+            "name": "KA",
+            "expression": "AVERAGE([Numerovalinta])",
+            "isHidden": true
+          },
+          {
+            "name": "Keskiarvo",
+            "expression": "IF([VM]<5,BLANK(),[KA])",
+            "formatString": "0.0"
+          },
+          {
+            "name": "KH",
+            "expression": "STDEV.P([Numerovalinta])",
+            "isHidden": true
+          },
+          {
+            "name": "Keskihajonta",
+            "expression": "IF([VM]<5,BLANK(),[KH])",
+            "formatString": "0.0"
+          },
+          {
+            "name": "Vastaajamäärä",
+            "expression": "IF([VM]<5,BLANK(),[VM])"
+          }
+        ],
+        "annotations": [
+          {
+            "name": "_TM_ExtProp_QueryDefinition",
+            "value": " SELECT [dbo].[v_avop_live].* FROM [dbo].[v_avop_live] "
+          },
+          {
+            "name": "_TM_ExtProp_DbTableName",
+            "value": "v_avop_live"
+          },
+          {
+            "name": "_TM_ExtProp_DbSchemaName",
+            "value": "dbo"
+          }
+        ]
+      }
+    ],
+    "annotations": [
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "400"
+      }
+    ]
+  },
+  "id": "SemanticModel"
+}
