@@ -7,5 +7,5 @@ ALTER TABLE dbo.sa_arvo_kaikki DROP COLUMN
   kyselypohja_fi,
   kyselypohja_sv,
   kyselypohja_en,
-  kyselypohjajarjestys int NULL
+  kyselypohjajarjestys
 END
