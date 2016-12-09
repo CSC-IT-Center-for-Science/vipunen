@@ -93,7 +93,7 @@ def load(hostname,url,table,verbose):
     kustannuspaikkaTeksti = jv(row, "kustannuspaikkaTeksti")
     emojulkaisunNimi = jv(row, "emojulkaisunNimi")
     emojulkaisunToimittajatTeksti = jv(row, "emojulkaisunToimittajatTeksti")
-    julkaisuntyyppiKoodi = jv(row, "julkaisuntyyppiKoodi")
+    julkaisutyyppiKoodi = jv(row, "julkaisutyyppiKoodi")
     yhteisjulkaisuKVKytkin = jv(row, "yhteisjulkaisuKVKytkin")
     yhteisjulkaisuSHPKytkin = jv(row, "yhteisjulkaisuSHPKytkin")
     yhteisjulkaisuTutkimuslaitosKytkin = jv(row, "yhteisjulkaisuTutkimuslaitosKytkin")
@@ -183,7 +183,7 @@ def load(hostname,url,table,verbose):
      organisaatioTunnus, ilmoitusVuosi, julkaisunTunnus, julkaisunTilakoodi, julkaisunOrgTunnus, julkaisuVuosi,
      julkaisunNimi, tekijatiedotTeksti, tekijoidenLkm, sivunumeroTeksti, artikkelinumero, isbn, jufoTunnus,
      jufoLuokkaKoodi, julkaisumaaKoodi, lehdenNimi, issn, volyymiTeksti, lehdenNumeroTeksti, konferenssinNimi,
-     kustantajanNimi, kustannuspaikkaTeksti, emojulkaisunNimi, emojulkaisunToimittajatTeksti, julkaisuntyyppiKoodi,
+     kustantajanNimi, kustannuspaikkaTeksti, emojulkaisunNimi, emojulkaisunToimittajatTeksti, julkaisutyyppiKoodi,
      yhteisjulkaisuKVKytkin, yhteisjulkaisuSHPKytkin, yhteisjulkaisuTutkimuslaitosKytkin, yhteisjulkaisuMuuKytkin,
      julkaisunKansainvalisyysKytkin, julkaisunKieliKoodi, avoinSaatavuusKoodi, evoJulkaisunKytkin, doi,
      pysyvaOsoiteTeksti, lahdetietokannanTunnus, latausId, yhteisjulkaisuId, rinnakkaistallennusKytkin,
@@ -208,7 +208,7 @@ def load(hostname,url,table,verbose):
      organisaatioTunnus, ilmoitusVuosi, julkaisunTunnus, julkaisunTilakoodi, julkaisunOrgTunnus, julkaisuVuosi,
      julkaisunNimi, tekijatiedotTeksti, tekijoidenLkm, sivunumeroTeksti, artikkelinumero, isbn, jufoTunnus,
      jufoLuokkaKoodi, julkaisumaaKoodi, lehdenNimi, issn, volyymiTeksti, lehdenNumeroTeksti, konferenssinNimi,
-     kustantajanNimi, kustannuspaikkaTeksti, emojulkaisunNimi, emojulkaisunToimittajatTeksti, julkaisuntyyppiKoodi,
+     kustantajanNimi, kustannuspaikkaTeksti, emojulkaisunNimi, emojulkaisunToimittajatTeksti, julkaisutyyppiKoodi,
      yhteisjulkaisuKVKytkin, yhteisjulkaisuSHPKytkin, yhteisjulkaisuTutkimuslaitosKytkin, yhteisjulkaisuMuuKytkin,
      julkaisunKansainvalisyysKytkin, julkaisunKieliKoodi, avoinSaatavuusKoodi, evoJulkaisunKytkin, doi,
      pysyvaOsoiteTeksti, lahdetietokannanTunnus, latausId, yhteisjulkaisuId, rinnakkaistallennusKytkin,
