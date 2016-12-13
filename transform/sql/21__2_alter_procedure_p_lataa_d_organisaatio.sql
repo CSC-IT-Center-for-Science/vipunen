@@ -1,24 +1,15 @@
-IF NOT EXISTS (
-  select *
-  from INFORMATION_SCHEMA.ROUTINES
-  where ROUTINE_TYPE='PROCEDURE'
-  and ROUTINE_SCHEMA='dbo'
-  and ROUTINE_NAME='p_lataa_d_organisaatio'
-) BEGIN
--- wrap in exec as create procedure must be first call in batch...
-exec('
-CREATE PROCEDURE dbo.p_lataa_d_organisaatio AS
+ALTER PROCEDURE dbo.p_lataa_d_organisaatio AS
 MERGE dbo.d_organisaatio AS target
 USING (
   SELECT
-    koodisto+''_''+koodi AS avain,
+    koodisto+'_'+koodi AS avain,
     koodi,
     COALESCE(nimi, nimi_sv, nimi_en) AS nimi,
     COALESCE(nimi_sv, nimi, nimi_en) AS nimi_sv,
     COALESCE(nimi_en, nimi, nimi_sv) AS nimi_en,
-    ''ETL: p_lataa_d_organisaatio'' AS source
+    'ETL: p_lataa_d_organisaatio' AS source
   FROM VIPUNEN_SA.dbo.sa_koodistot
-  where koodisto in (''oppilaitosnumero'',''koulutustoimija'')
+  where koodisto in ('oppilaitosnumero','koulutustoimija')
   and koodi not in (
     select b.koodi from VIPUNEN_SA..sa_koodistot b
     where b.koodisto=sa_koodistot.koodisto and b.koodi=sa_koodistot.koodi
@@ -46,5 +37,3 @@ WHEN NOT MATCHED THEN
     src.koodi, src.nimi, src.nimi_sv, src.nimi_en,
     src.source
   );
-')
-END
