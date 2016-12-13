@@ -4,6 +4,6 @@ IF NOT EXISTS (
   and COLUMN_NAME='vastaajaid'
 ) BEGIN
 
-ALTER TABLE dbo.f_avop_tilasto ADD COLUMN vastausid int null
+ALTER TABLE dbo.f_avop_tilasto ADD vastausid int null
 
 END
