@@ -6,16 +6,14 @@
     [string]$testsqlserver = "dwitvipusql16",
     [string]$prodserver = "dwitviputab16",
     [string]$prodsqlserver = "dwipvipusql16",
-    [string]$exe = "C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe"
+    [string]$exe = "C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe",
+    [string]$username = "dwi\ajotunnus",
+    [string]$password = "derp"
 )
 
 [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.AnalysisServices")
 [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.AnalysisServices.AdomdClient") | out-null
 [System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic') | Out-Null
-
-$serverName = “Data Source=” + $prodserver
-$serverAS = New-Object Microsoft.AnalysisServices.AdomdClient.AdomdConnection $serverName
-$serverAS.open()
 
 if([bool]((Get-Content $modelfile) -as [xml]))
 {
@@ -23,25 +21,35 @@ if([bool]((Get-Content $modelfile) -as [xml]))
     $arg2 = "/o:""" + $scriptfile + """"
     $arg3 = "/d"
 
-    Start-Process -FilePath $exe -ArgumentList $modelfile, $arg2, $arg3
-
-    #(Get-Content $scriptfile).replace($testsqlserver, $prodsqlserver) | Set-Content $scriptfile
-    #(Get-Content $scriptfile) | Foreach-Object {$_ -replace $testsqlserver, $prodsqlserver}  | Out-File $scriptfile
-
-    $xml = [xml]((Get-Content $scriptfile -Encoding Unicode))
-    $node = $xml.Alter.ObjectDefinition.Database.DataSources.ChildNodes
-    foreach($datasource in $node)
+    try
     {
-        $datasource.ImpersonationInfo.Account = 'dwi\ajotunnus'
-        $pw = $xml.CreateElement("Password", "http://schemas.microsoft.com/analysisservices/2003/engine")
-        $pwtext = $xml.CreateTextNode('World')
-        $datasource.ImpersonationInfo.AppendChild($pw)
-        $pw.AppendChild($pwtext)
-    }
+        Start-Process -FilePath $exe -ArgumentList $modelfile, $arg2, $arg3 -Wait #-RedirectStandardOutput d:\temp\stdout.txt -RedirectStandardError d:\temp\stderr.txt
 
-    $query = $xml.OuterXml
-    $cmd = New-Object Microsoft.AnalysisServices.AdomdClient.AdomdCommand $query, $serverAS
-    $cmd.ExecuteNonQuery();
+        (Get-Content $scriptfile) | Foreach-Object {$_ -replace $testsqlserver, $prodsqlserver} | Out-File $scriptfile
+
+        $xml = [xml]((Get-Content $scriptfile -Encoding Unicode))
+        $node = $xml.Alter.ObjectDefinition.Database.DataSources.ChildNodes
+        foreach($datasource in $node)
+        {
+            $datasource.ImpersonationInfo.Account = $username
+            $pw = $xml.CreateElement("Password", "http://schemas.microsoft.com/analysisservices/2003/engine")
+            $pwtext = $xml.CreateTextNode($password)
+            $datasource.ImpersonationInfo.AppendChild($pw)
+            $pw.AppendChild($pwtext)
+        }
+
+        $serverName = “Data Source=” + $prodserver
+        $serverAS = New-Object Microsoft.AnalysisServices.AdomdClient.AdomdConnection $serverName
+        $serverAS.open()
+
+        $query = $xml.OuterXml
+        $cmd = New-Object Microsoft.AnalysisServices.AdomdClient.AdomdCommand $query, $serverAS
+        $cmd.ExecuteNonQuery()
+    }
+    catch
+    {
+        
+    }
 }
 else
 {
@@ -49,24 +57,35 @@ else
     $arg2 = "/o:""" + $scriptfile + """"
     $arg3 = "/d"
 
-    Start-Process -FilePath $exe -ArgumentList $modelfile, $arg2, $arg3
+    try
+    {
+        Start-Process -FilePath $exe -ArgumentList $modelfile, $arg2, $arg3 -Wait #-RedirectStandardOutput d:\temp\stdout.txt -RedirectStandardError d:\temp\stderr.txt
 
-    #(Get-Content $scriptfile).replace($testsqlserver, $prodsqlserver) | Set-Content $scriptfile
-    #(Get-Content $scriptfile) | Foreach-Object {$_ -replace $testsqlserver, $prodsqlserver}  | Out-File $scriptfile
+        (Get-Content $scriptfile) | Foreach-Object {$_ -replace $testsqlserver, $prodsqlserver} | Out-File $scriptfile
 
-    $a = Get-Content $scriptfile | Out-String | ConvertFrom-Json
-    $b = $a.createOrReplace
-    $c = $b.database
-    $d = $c.model
-    $e = $d.dataSources
-    $f = $e[0]
-    $f.account = 'dwi\ajotunnus'
-    #Add-Member -InputObject $f -MemberType NoteProperty -Name 'password' -Value 'World' 
+        $a = Get-Content $scriptfile | Out-String | ConvertFrom-Json
+        $b = $a.createOrReplace
+        $c = $b.database
+        $d = $c.model
+        $e = $d.dataSources
+        $f = $e[0]
 
-    #$s2 = $a | ConvertTo-Json -Depth 64
-    #$s2 |out-file -filepath $scriptfile
+        $f.account = $username
+        Add-Member -InputObject $f -MemberType NoteProperty -Name 'password' -Value $password
 
-    $query = $a | ConvertTo-Json -Depth 64
-    $cmd = New-Object Microsoft.AnalysisServices.AdomdClient.AdomdCommand $query, $serverAS
-    $cmd.ExecuteNonQuery();
+        $s2 = $a | ConvertTo-Json -Depth 64
+        $s2 |out-file -filepath $scriptfile
+
+        $serverName = “Data Source=” + $prodserver
+        $serverAS = New-Object Microsoft.AnalysisServices.AdomdClient.AdomdConnection $serverName
+        $serverAS.open()
+
+        $query = $a | ConvertTo-Json -Depth 64
+        $cmd = New-Object Microsoft.AnalysisServices.AdomdClient.AdomdCommand $query, $serverAS
+        $cmd.ExecuteNonQuery()
+    }
+    catch
+    {
+        
+    }
 }
