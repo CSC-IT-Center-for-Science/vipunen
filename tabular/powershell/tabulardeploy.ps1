@@ -7,8 +7,8 @@
     [string]$prodserver = "dwitviputab16",
     [string]$prodsqlserver = "dwipvipusql16",
     [string]$exe = "C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\ManagementStudio\Microsoft.AnalysisServices.Deployment.exe",
-    [string]$username = "dwi\ajotunnus",
-    [string]$password = "derp"
+    [string]$username = "USERNAME",
+    [string]$password = "PASSWORD"
 )
 
 [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.AnalysisServices")
@@ -48,7 +48,7 @@ if([bool]((Get-Content $modelfile) -as [xml]))
     }
     catch
     {
-        
+        $error[0]
     }
 }
 else
@@ -86,6 +86,6 @@ else
     }
     catch
     {
-        
+        $error[0]
     }
 }
