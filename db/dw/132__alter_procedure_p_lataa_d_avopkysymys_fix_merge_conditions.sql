@@ -1,27 +1,20 @@
-USE [VIPUNEN_DW]
-GO
-/****** Object:  StoredProcedure [dbo].[p_lataa_d_avopkysymys]    Script Date: 19.12.2016 14:39:24 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER PROCEDURE [dbo].[p_lataa_d_avopkysymys] AS
+ALTER PROCEDURE dbo.p_lataa_d_avopkysymys AS
 if not exists (select * from dbo.d_avopkysymys where id=-1) begin
   set identity_insert dbo.d_avopkysymys on;
   insert into dbo.d_avopkysymys (
     id,
     kysymysryhmaid,kysymysryhma_fi,kysymysryhma_sv,kysymysryhma_en,
     kysymysid,kysymys_fi,kysymys_sv,kysymys_en,
-  kysymysryhmajarjestys,kysymysjarjestys,
-  rahoitusmallikysymys,
+    kysymysryhmajarjestys,kysymysjarjestys,
+    rahoitusmallikysymys,
     source
   )
   select
     -1,
     koodi,nimi,nimi_sv,nimi_en,
     koodi,nimi,nimi_sv,nimi_en,
-  999,999,
-  0,
+    999,999,
+    0,
     'ETL: p_lataa_d_avopkysymys'
   from VIPUNEN_SA.dbo.sa_koodistot
   where koodisto='vipunenmeta'
@@ -30,18 +23,19 @@ if not exists (select * from dbo.d_avopkysymys where id=-1) begin
   set identity_insert dbo.d_avopkysymys off;
 end else begin
   update d
-  set kysymysryhmaid=s.koodi,
-  kysymysryhma_fi=s.nimi,
-  kysymysryhma_sv=s.nimi_sv,
-  kysymysryhma_en=s.nimi_en,
-  kysymysid=s.koodi,
-  kysymys_fi=s.nimi,
-  kysymys_sv=s.nimi_sv,
-  kysymys_en=s.nimi_en,
-  kysymysryhmajarjestys=999,
-  kysymysjarjestys=999,
-  rahoitusmallikysymys=0,
-  source='ETL: p_lataa_d_avopkysymys'
+  set
+    kysymysryhmaid=s.koodi,
+    kysymysryhma_fi=s.nimi,
+    kysymysryhma_sv=s.nimi_sv,
+    kysymysryhma_en=s.nimi_en,
+    kysymysid=s.koodi,
+    kysymys_fi=s.nimi,
+    kysymys_sv=s.nimi_sv,
+    kysymys_en=s.nimi_en,
+    kysymysryhmajarjestys=999,
+    kysymysjarjestys=999,
+    rahoitusmallikysymys=0,
+    source='ETL: p_lataa_d_avopkysymys'
   from dbo.d_avopkysymys d
   join VIPUNEN_SA.dbo.sa_koodistot s on s.koodi=d.kysymysryhmaid
   where s.koodisto='vipunenmeta'
@@ -51,26 +45,26 @@ end
 MERGE dbo.d_avopkysymys AS target
 USING (
   SELECT
-   kysymysryhmaid
-  ,COALESCE(kysymysryhma_fi,kysymysryhma_sv,kysymysryhma_en) kysymysryhma_fi
-  ,COALESCE(kysymysryhma_sv,kysymysryhma_fi,kysymysryhma_en) kysymysryhma_sv
-  ,COALESCE(kysymysryhma_en,kysymysryhma_fi,kysymysryhma_sv) kysymysryhma_en
-  ,kysymysid
-  ,COALESCE(kysymys_fi,kysymys_sv,kysymys_en) kysymys_fi
-  ,COALESCE(kysymys_sv,kysymys_fi,kysymys_en) kysymys_sv
-  ,COALESCE(kysymys_en,kysymys_fi,kysymys_sv) kysymys_en
-  ,kysymysryhmajarjestys
-  ,kysymysjarjestys
+  kysymysryhmaid,
+  COALESCE(kysymysryhma_fi,kysymysryhma_sv,kysymysryhma_en) kysymysryhma_fi,
+  COALESCE(kysymysryhma_sv,kysymysryhma_fi,kysymysryhma_en) kysymysryhma_sv,
+  COALESCE(kysymysryhma_en,kysymysryhma_fi,kysymysryhma_sv) kysymysryhma_en,
+  kysymysid,
+  COALESCE(kysymys_fi,kysymys_sv,kysymys_en) kysymys_fi,
+  COALESCE(kysymys_sv,kysymys_fi,kysymys_en) kysymys_sv,
+  COALESCE(kysymys_en,kysymys_fi,kysymys_sv) kysymys_en,
+  kysymysryhmajarjestys,
+  kysymysjarjestys,
   -- TODO: mapping from kysymys to rahoitusmalli
-  ,0 AS rahoitusmallikysymys
-  ,'ETL: p_lataa_d_avopkysymys' AS source
+  0 AS rahoitusmallikysymys,
+  'ETL: p_lataa_d_avopkysymys' AS source
   FROM VIPUNEN_SA.dbo.sa_arvo_kaikki
   WHERE 1 = 1
   GROUP BY
-   kysymysryhmaid,kysymysryhma_fi,kysymysryhma_sv,kysymysryhma_en
-  ,kysymysid,kysymys_fi,kysymys_sv,kysymys_en
-  ,kysymysryhmajarjestys
-  ,kysymysjarjestys
+  kysymysryhmaid,kysymysryhma_fi,kysymysryhma_sv,kysymysryhma_en,
+  kysymysid,kysymys_fi,kysymys_sv,kysymys_en,
+  kysymysryhmajarjestys,
+  kysymysjarjestys
   ) AS src
 ON target.kysymysryhmaid = src.kysymysryhmaid AND target.kysymysid = src.kysymysid
   AND target.kysymysryhmajarjestys = src.kysymysryhmajarjestys
