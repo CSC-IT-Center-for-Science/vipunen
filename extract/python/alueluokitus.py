@@ -5,14 +5,14 @@ alueluokitus
 
 todo doc
 """
-import sys, getopt
+import sys, os, getopt
 import httplib
 import json
 from time import localtime, strftime
 
 import dboperator
 
-def teerow():
+def makerow():
   return {
     'koodi':None, 'nimi':None, 'nimi_sv':None, 'nimi_en':None, 'alkupvm':None, 'loppupvm':None,
     'maakuntakoodi':None, 'maakuntanimi':None, 'maakuntanimi_sv':None, 'maakuntanimi_en':None,
@@ -24,13 +24,13 @@ def teerow():
     'kuntaryhmakoodi':None, 'kuntaryhmanimi':None, 'kuntaryhmanimi_sv':None, 'kuntaryhmanimi_en':None
   }
 
-# hae avaimen arvo json:sta 
+# get value from json
 def jv(jsondata, key):
   if key in jsondata:
     return jsondata[key]
   return None
 
-def haenimi(i,kieli):
+def getnimi(i,kieli):
     for m in i["metadata"]:
         if m["kieli"] == kieli:
             return m["nimi"]
@@ -39,15 +39,13 @@ def haenimi(i,kieli):
 def load(secure,hostname,url,table,codeset,verbose=False,debug=False):
   if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" begin"
 
-  # tehdään "columnlist" erikseen itse (type ei merkitystä, ei tehdä taulua vaan se on jo)
-  row = teerow()
-  # tämä kutsu alustaa dboperatorin muuttujat, jotta insert-kutsu toimii
+  row = makerow()
   dboperator.columns(row,debug)
   
   if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" empty %s"%(table)
   dboperator.empty(table,debug)
 
-  url = url % codeset # korvaa placeholder
+  url = url % codeset # replace placeholder
   if secure:
     httpconn = httplib.HTTPSConnection(hostname)
     print strftime("%Y-%m-%d %H:%M:%S", localtime())+" load securely from "+hostname+url
@@ -61,17 +59,16 @@ def load(secure,hostname,url,table,codeset,verbose=False,debug=False):
   cnt = 0
   for i in j:
     cnt += 1
-    # tee "row" (tyhjätään arvot)
-    row = teerow()
+    row = makerow()
 
     row["koodi"] = jv(i,"koodiArvo")
-    row["nimi"] = haenimi(i,"FI")
-    row["nimi_sv"] = haenimi(i,"SV")
-    row["nimi_en"] = haenimi(i,"FI")
+    row["nimi"] = getnimi(i,"FI")
+    row["nimi_sv"] = getnimi(i,"SV")
+    row["nimi_en"] = getnimi(i,"FI")
     row["alkupvm"] = jv(i,"voimassaAlkuPvm")
     row["loppupvm"] = jv(i,"voimassaLoppuPvm")
 
-    # luokitukset (nb! avi loytyy eri suunnasta!)
+    # classifications (nb! avi is in different direction!)
     httpconn.request('GET', "/koodisto-service/rest/json/relaatio/sisaltyy-ylakoodit/%s" % i["koodiUri"])
     rr = httpconn.getresponse()
     jj = json.loads(rr.read())
@@ -79,10 +76,10 @@ def load(secure,hostname,url,table,codeset,verbose=False,debug=False):
     for ii in jj:
       if ii["koodisto"]["koodistoUri"] == "aluehallintovirasto":
         row["avikoodi"] = jv(ii,"koodiArvo")
-        row["avinimi"] = haenimi(ii,"FI")
-        row["avinimi_sv"] = haenimi(ii,"SV")
-        row["avinimi_en"] = haenimi(ii,"EN")
-    # muut luokitukset
+        row["avinimi"] = getnimi(ii,"FI")
+        row["avinimi_sv"] = getnimi(ii,"SV")
+        row["avinimi_en"] = getnimi(ii,"EN")
+    # other classifications
     httpconn.request('GET', "/koodisto-service/rest/json/relaatio/sisaltyy-alakoodit/%s" % i["koodiUri"])
     rr = httpconn.getresponse()
     jj = json.loads(rr.read())
@@ -90,34 +87,34 @@ def load(secure,hostname,url,table,codeset,verbose=False,debug=False):
     for ii in jj:
       if ii["koodisto"]["koodistoUri"] == "maakunta":
         row["maakuntakoodi"] = jv(ii,"koodiArvo")
-        row["maakuntanimi"] = haenimi(ii,"FI")
-        row["maakuntanimi_sv"] = haenimi(ii,"SV")
-        row["maakuntanimi_en"] = haenimi(ii,"EN")
+        row["maakuntanimi"] = getnimi(ii,"FI")
+        row["maakuntanimi_sv"] = getnimi(ii,"SV")
+        row["maakuntanimi_en"] = getnimi(ii,"EN")
       if ii["koodisto"]["koodistoUri"] == "elykeskus":
         row["elykoodi"] = jv(ii,"koodiArvo")
-        row["elynimi"] = haenimi(ii,"FI")
-        row["elynimi_sv"] = haenimi(ii,"SV")
-        row["elynimi_en"] = haenimi(ii,"EN")
+        row["elynimi"] = getnimi(ii,"FI")
+        row["elynimi_sv"] = getnimi(ii,"SV")
+        row["elynimi_en"] = getnimi(ii,"EN")
       if ii["koodisto"]["koodistoUri"] == "kielisuhde":
         row["kielisuhdekoodi"] = jv(ii,"koodiArvo")
-        row["kielisuhdenimi"] = haenimi(ii,"FI")
-        row["kielisuhdenimi_sv"] = haenimi(ii,"SV")
-        row["kielisuhdenimi_en"] = haenimi(ii,"EN")
+        row["kielisuhdenimi"] = getnimi(ii,"FI")
+        row["kielisuhdenimi_sv"] = getnimi(ii,"SV")
+        row["kielisuhdenimi_en"] = getnimi(ii,"EN")
       if ii["koodisto"]["koodistoUri"] == "seutukunta":
         row["seutukuntakoodi"] = jv(ii,"koodiArvo")
-        row["seutukuntanimi"] = haenimi(ii,"FI")
-        row["seutukuntanimi_sv"] = haenimi(ii,"SV")
-        row["seutukuntanimi_en"] = haenimi(ii,"EN")
+        row["seutukuntanimi"] = getnimi(ii,"FI")
+        row["seutukuntanimi_sv"] = getnimi(ii,"SV")
+        row["seutukuntanimi_en"] = getnimi(ii,"EN")
       if ii["koodisto"]["koodistoUri"] == "laani":
         row["laanikoodi"] = jv(ii,"koodiArvo")
-        row["laaninimi"] = haenimi(ii,"FI")
-        row["laaninimi_sv"] = haenimi(ii,"SV")
-        row["laaninimi_en"] = haenimi(ii,"EN")
+        row["laaninimi"] = getnimi(ii,"FI")
+        row["laaninimi_sv"] = getnimi(ii,"SV")
+        row["laaninimi_en"] = getnimi(ii,"EN")
       if ii["koodisto"]["koodistoUri"] == "kuntaryhma":
         row["kuntaryhmakoodi"] = jv(ii,"koodiArvo")
-        row["kuntaryhmanimi"] = haenimi(ii,"FI")
-        row["kuntaryhmanimi_sv"] = haenimi(ii,"SV")
-        row["kuntaryhmanimi_en"] = haenimi(ii,"EN")
+        row["kuntaryhmanimi"] = getnimi(ii,"FI")
+        row["kuntaryhmanimi_sv"] = getnimi(ii,"SV")
+        row["kuntaryhmanimi_en"] = getnimi(ii,"EN")
 
     if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" %d -- %s"%(cnt,row["koodi"])
     dboperator.insert(hostname+url,table,row,debug)
@@ -131,19 +128,19 @@ def usage():
 usage: alueluokitus.py [-s|--secure] [-H|--hostname <hostname>] [-u|--url <url>] [-t|--table <table>] -c|--codeset <codeset> [-v|--verbose] [-d|--debug]
 
 secure defaults to being secure (HTTPS) (so no point in using this argument at all)
-hostname defaults to "testi.virkailija.opintopolku.fi"
+hostname defaults to $OPINTOPOLKU then to "testi.virkailija.opintopolku.fi"
 url defaults to "/koodisto-service/rest/json/%s/koodi" (do notice the %s in middle which is a placeholder for codeset argument)
 table defaults to "sa_alueluokitus"
 codeset defaults to "kunta"
 """
 
 def main(argv):
-  # muuttujat jotka kerrotaan argumentein
-  secure = True # tässä tapauksessa oletetaan secure!
-  hostname = "testi.virkailija.opintopolku.fi" # hostname oletuksella
-  url = "/koodisto-service/rest/json/%s/koodi" # url oletuksella (nb %s)
-  table = "sa_alueluokitus" # table oletuksella
-  codeset = "kunta" # nb! alueluokitus jolloin "avain" on kunta
+  # variables from arguments with possible defaults
+  secure = True # default secure, so always secure!
+  hostname = os.getenv("OPINTOPOLKU") or "testi.virkailija.opintopolku.fi"
+  url = "/koodisto-service/rest/json/%s/koodi" # nb %s
+  table = "sa_alueluokitus"
+  codeset = "kunta"
   verbose,debug = False,False
   
   try:

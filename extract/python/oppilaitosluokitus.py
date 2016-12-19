@@ -5,14 +5,14 @@ oppilaitosluokitus
 
 todo doc
 """
-import sys, getopt
+import sys, os, getopt
 import httplib
 import json
 from time import localtime, strftime
 
 import dboperator
 
-def teerow():
+def makerow():
   return {
     'oid':None, 'koodi':None, 'nimi':None, 'nimi_sv':None, 'nimi_en':None, 'alkupvm':None, 'loppupvm':None,
     'kuntakoodi':None, 'oppilaitostyyppikoodi':None,
@@ -22,15 +22,15 @@ def teerow():
 def load(secure,hostname,url,table,codeset,verbose=False,debug=False):
   if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" begin"
 
-  # tehdään "columnlist" erikseen itse (type ei merkitystä, ei tehdä taulua vaan se on jo)
-  row = teerow()
-  # tämä kutsu alustaa dboperatorin muuttujat, jotta insert-kutsu toimii
+  # make "columnlist" (type has no meaning as we're not creating table)
+  row = makerow()
+  # setup dboperator so other calls work
   dboperator.columns(row,debug)
   
   if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" empty %s"%(table)
   dboperator.empty(table,debug)
 
-  url = "" # korvataan kovakoodatuilla linkeillä alla
+  url = "" # replace with hardcoded values below
   if secure:
     httpconn = httplib.HTTPSConnection(hostname)
     print strftime("%Y-%m-%d %H:%M:%S", localtime())+" load securely from "+hostname+url
@@ -49,11 +49,11 @@ def load(secure,hostname,url,table,codeset,verbose=False,debug=False):
     j = json.loads(r.read())
     cnt = 0
     for i in j["organisaatiot"]:
-      # tee "row" (tyhjätään arvot)
-      row = teerow()
+      # make "row" (clear values)
+      row = makerow()
       
       row["jarjestajaoid"] = i["oid"]
-      row["jarjestajakoodi"] = None if "ytunnus" not in i else i["ytunnus"] # voi olla None
+      row["jarjestajakoodi"] = None if "ytunnus" not in i else i["ytunnus"] # may be None
       row["jarjestajanimi"] = None if "fi" not in i["nimi"] else i["nimi"]["fi"]
       row["jarjestajanimi_sv"] = None if "sv" not in i["nimi"] else i["nimi"]["sv"]
       row["jarjestajanimi_en"] = None if "en" not in i["nimi"] else i["nimi"]["en"]
@@ -71,9 +71,9 @@ def load(secure,hostname,url,table,codeset,verbose=False,debug=False):
           row["loppupvm"] = None if "lakkautusPvm" not in o else strftime("%Y-%m-%d",localtime(o["lakkautusPvm"]/1000))
           
           row["kuntakoodi"] = o["kotipaikkaUri"].replace("kunta_","")
-          # => nimitiedot erikseen
+          # => text values separately
           row["oppilaitostyyppikoodi"] = o["oppilaitostyyppi"].replace("oppilaitostyyppi_","").replace("#1","")
-          # => nimitiedot erikseen
+          # => text values separately
   
           if verbose: print strftime("%Y-%m-%d %H:%M:%S", localtime())+" %d -- %s"%(cnt,row["koodi"])
           dboperator.insert(hostname+url,table,row,debug)
@@ -87,19 +87,19 @@ def usage():
 usage: oppilaitosluokitus.py [-s|--secure] [-H|--hostname <hostname>] [-u|--url <url>] [-t|--table <table>] -c|--codeset <codeset> [-v|--verbose] [-d|--debug]
 
 secure defaults to being secure (HTTPS) (so no point in using this argument at all)
-hostname defaults to "testi.virkailija.opintopolku.fi"
+hostname defaults to $OPINTOPOLKU then to "testi.virkailija.opintopolku.fi"
 url not used
 table defaults to "sa_oppilaitosluokitus"
 codeset not used
 """
 
 def main(argv):
-  # muuttujat jotka kerrotaan argumentein
-  secure = True # tässä tapauksessa oletetaan secure!
-  hostname = "testi.virkailija.opintopolku.fi" # hostname oletuksella
-  url = "N/A" # url oletuksella (nb argumenttia ei käytetä!)
-  table = "sa_oppilaitosluokitus" # table oletuksella
-  codeset = "N/A" # (nb argumenttia ei käytetä!)
+  # variables from arguments with possible defaults
+  secure = True # default secure, so always secure!
+  hostname = os.getenv("OPINTOPOLKU") or "testi.virkailija.opintopolku.fi"
+  url = "N/A" # nb argument not used!
+  table = "sa_oppilaitosluokitus"
+  codeset = "N/A" # nb argument not used!
   verbose,debug = False,False
   
   try:

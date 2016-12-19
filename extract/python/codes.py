@@ -5,14 +5,14 @@ codes
 
 todo doc
 """
-import sys, getopt
+import sys, os, getopt
 import httplib
 import json
 from time import localtime, strftime
 
 import dboperator
 
-def haenimi(i,kieli):
+def getnimi(i,kieli):
   for m in i["metadata"]:
     if m["kieli"] == kieli:
       return m["nimi"]
@@ -24,9 +24,9 @@ def show(message):
 def load(secure,hostname,url,table,codeset,verbose=False):
   if verbose: show("begin")
 
-  # tehdään "columnlist" erikseen itse (type ei merkitystä, ei tehdä taulua vaan se on jo)
+  # make "columnlist" separately (type has no meaning as we're not creating table)
   row = {'koodisto':None,'koodi':None,'nimi':None,'nimi_sv':None,'nimi_en':None,'alkupvm':None,'loppupvm':None}
-  # tämä kutsu alustaa dboperatorin muuttujat, jotta insert-kutsu toimii
+  # setup dboperator variables so insert works
   dboperator.columns(row)
 
   #show("empty sa_koodistot")
@@ -49,13 +49,13 @@ def load(secure,hostname,url,table,codeset,verbose=False):
   dboperator.remove(table,"koodisto",codeset)
   for i in j:
     cnt += 1
-    # tee "row"
+    # make "row"
     row["koodisto"] = codeset
-    # sarakkeet
+    # columns
     row["koodi"] = i["koodiArvo"]
-    row["nimi"] = haenimi(i,"FI")
-    row["nimi_sv"] = haenimi(i,"SV")
-    row["nimi_en"] = haenimi(i,"EN")
+    row["nimi"] = getnimi(i,"FI")
+    row["nimi_sv"] = getnimi(i,"SV")
+    row["nimi_en"] = getnimi(i,"EN")
     row["alkupvm"] = i["voimassaAlkuPvm"]
     row["loppupvm"] = i["voimassaLoppuPvm"]
 
@@ -71,18 +71,18 @@ def usage():
 usage: codes.py [-s|--secure] [-H|--hostname <hostname>] [-u|--url <url>] [-t|--table <table>] -c|--codeset <codeset> [-v|--verbose]
 
 secure defaults to being secure (HTTPS) (so no point in using this argument at all)
-hostname defaults to "testi.virkailija.opintopolku.fi"
+hostname defaults to $OPINTOPOLKU then to "testi.virkailija.opintopolku.fi"
 url defaults to "/koodisto-service/rest/json/%s/koodi" (do notice the %s in middle which is a placeholder for codeset argument)
 table defaults to "sa_koodistot"
 codeset is the only mandatory argument. No default. Name of the "koodisto" to be loaded.
 """
 
 def main(argv):
-  # muuttujat jotka kerrotaan argumentein
-  secure = True # tässä tapauksessa oletetaan secure!
-  hostname = "testi.virkailija.opintopolku.fi" # hostname oletuksella
-  url = "/koodisto-service/rest/json/%s/koodi" # url oletuksella (nb %s)
-  table = "sa_koodistot" # table oletuksella
+  # variables from arguments with possible defaults
+  secure = True # default secure, so always secure!
+  hostname = os.getenv("OPINTOPOLKU") or "testi.virkailija.opintopolku.fi"
+  url = "/koodisto-service/rest/json/%s/koodi"
+  table = "sa_koodistot"
   codeset = ""
   verbose = False
 
