@@ -75,7 +75,7 @@ else
         #$s2 = $a | ConvertTo-Json -Depth 64
         #$s2 |out-file -filepath $scriptfile
 
-        $serverName = “Data Source=” + $prodtabserver
+        $serverName = "Data Source=" + $prodtabserver
         $serverAS = New-Object Microsoft.AnalysisServices.AdomdClient.AdomdConnection $serverName
         $serverAS.open()
 
