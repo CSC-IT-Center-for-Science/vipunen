@@ -1,6 +1,0 @@
-C:\Users\jpesonen\Source\Repos\vipunen\AVOP\AVOP\bin\Model.asdatabase
-C:\Users\jpesonen\Source\Repos\vipunen\AVOP\AVOP\bin\Model.deploymenttargets
-C:\Users\jpesonen\Source\Repos\vipunen\AVOP\AVOP\bin\Model.deploymentoptions
-C:\Users\jpesonen\Source\Repos\vipunen\AVOP\AVOP\obj\Development\Model.asdatabase
-C:\Users\jpesonen\Source\Repos\vipunen\AVOP\AVOP\obj\Development\Model.deploymentoptions
-C:\Users\jpesonen\Source\Repos\vipunen\AVOP\AVOP\obj\Development\Model.deploymenttargets
